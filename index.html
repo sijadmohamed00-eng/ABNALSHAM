@@ -51,14 +51,10 @@
 <script src="js/main.js"></script>
 </head>
 <body>
-</style>
 
-</head>
-<body>
 <div id="toastWrap"></div>
 
 <!-- ═══ LOGIN ═══ -->
-
 <div class="screen active" id="loginScreen">
   <div style="align-items:center;justify-content:center;display:flex;flex:1;padding:20px;background:radial-gradient(ellipse at 50% 0%,rgba(240,192,64,.12) 0%,transparent 65%),var(--bg)">
     <div style="width:100%;max-width:400px">
@@ -73,13 +69,12 @@
         <label class="remember-row"><input type="checkbox" id="rememberMe"><span>تذكرني — دخول تلقائي</span></label>
         <button class="btn-login" onclick="doLogin()">دخول 🚀</button>
         <div class="lerr" id="lerr">❌ اسم المستخدم أو كلمة المرور غير صحيحة</div>
-        </div>
+      </div>
     </div>
   </div>
 </div>
 
 <!-- ═══ EMPLOYEE SCREEN ═══ -->
-
 <div class="screen" id="empScreen">
   <div class="topbar">
     <div class="tb-brand">
@@ -97,7 +92,6 @@
     </div>
   </div>
   <div style="display:flex;flex:1;overflow:hidden">
-    <!-- Sidebar for desktop -->
     <div class="sidebar" id="empSidebar">
       <div class="stitle">القائمة</div>
       <div class="sitem active" onclick="showETab('home',this)"><span class="ico">🏠</span>الرئيسية</div>
@@ -142,12 +136,8 @@
           </div>
         </div>
         <div class="ci-btns">
-          <button class="ci-btn in-btn" id="btnCI" onclick="doCI()" disabled>
-            <span style="font-size:22px">✅</span><span>تسجيل الحضور</span><span class="ci-sub" id="ciSub">بانتظار GPS...</span>
-          </button>
-          <button class="ci-btn out-btn" id="btnCO" onclick="doCO()" disabled>
-            <span style="font-size:22px">🚪</span><span>تسجيل الانصراف</span><span class="ci-sub">متاح بعد تسجيل الحضور</span>
-          </button>
+          <button class="ci-btn in-btn" id="btnCI" onclick="doCI()" disabled><span style="font-size:22px">✅</span><span>تسجيل الحضور</span><span class="ci-sub" id="ciSub">بانتظار GPS...</span></button>
+          <button class="ci-btn out-btn" id="btnCO" onclick="doCO()" disabled><span style="font-size:22px">🚪</span><span>تسجيل الانصراف</span><span class="ci-sub">متاح بعد تسجيل الحضور</span></button>
         </div>
         <div class="sal-overview">
           <div style="font-size:11px;color:var(--t2);margin-bottom:8px" id="empPeriodLabel">الفترة الحالية</div>
@@ -330,11 +320,9 @@
                 <div class="loan-opt" onclick="selectLoan(this,75000)">75,000</div>
                 <div class="loan-opt" onclick="selectLoan(this,100000)" style="grid-column:span 3">100,000 الحد الأقصى</div>
               </div>
-              <!-- مبلغ مخصص -->
               <div style="display:flex;align-items:center;gap:8px;background:var(--bg3);border:1.5px dashed var(--br2);border-radius:10px;padding:10px 12px;margin-bottom:6px">
                 <span style="font-size:12px;color:var(--t2);white-space:nowrap">✏️ مبلغ مخصص:</span>
-                <input type="number" id="loanCustomInput" class="fi" placeholder="اكتب المبلغ" style="flex:1;margin-bottom:0;min-width:0" min="1000" max="500000"
-                  oninput="if(this.value){selectLoanCustom(parseInt(this.value))}" >
+                <input type="number" id="loanCustomInput" class="fi" placeholder="اكتب المبلغ" style="flex:1;margin-bottom:0;min-width:0" min="1000" max="500000" oninput="if(this.value){selectLoanCustom(parseInt(this.value))}">
                 <span style="font-size:11px;color:var(--t3);white-space:nowrap">د.ع</span>
               </div>
               <div style="text-align:center;font-size:14px;font-weight:800;color:var(--gold);min-height:24px" id="loanSelectedLabel"></div>
@@ -368,11 +356,10 @@
 </div>
 
 <!-- ═══ ADMIN SCREEN ═══ -->
-
 <div class="screen" id="adminScreen">
   <div class="topbar">
     <div class="tb-brand">
-      <img src="icon.png" class="tb-icon-img" alt="سندريلا" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><div class="tb-icon" style="background:linear-gradient(135deg,var(--gold),#ffab40);display:none">👑</div>
+      <img src="icon.png" class="tb-icon-img" alt="ابن الشام" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><div class="tb-icon" style="background:linear-gradient(135deg,var(--gold),#ffab40);display:none">👑</div>
       <div><h1>ابن الشام | لوحة التحكم</h1><span>بغداد — حي اور</span></div>
     </div>
     <div class="tb-right">
@@ -382,7 +369,6 @@
         <div><div class="uname">سجاد محمد</div><div class="urole" style="color:var(--gold)">المدير</div></div>
       </div>
       <button class="btn btn-sc btn-sm" onclick="logout()">خروج 🚪</button>
-      <button class="btn btn-sc btn-sm" onclick="toggleTheme()" id="themeBtn" title="تبديل الوضع">🌙</button>
     </div>
   </div>
   <div class="sysbar">
@@ -468,26 +454,16 @@
     <div><h2>📍 سجل الحضور</h2></div>
     <button class="btn btn-ok btn-sm" onclick="exportAttExcel()">📊 تصدير Excel</button>
   </div>
-
-  <!-- ✅ تسجيل حضور يدوي -->
   <div class="card mb16" style="border-color:rgba(0,230,118,.25);background:linear-gradient(135deg,rgba(0,230,118,.04),transparent)">
     <div class="ch"><h3 style="color:var(--green)">✏️ تسجيل حضور يدوي</h3><span class="cbadge" style="background:rgba(0,230,118,.1);color:var(--green)">من صلاحية المدير</span></div>
     <div class="cb">
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
-        <div class="fg"><label>الموظف</label>
-          <select class="fi" id="manAttEmp"></select>
-        </div>
-        <div class="fg"><label>التاريخ</label>
-          <input type="date" class="fi" id="manAttDate">
-        </div>
+        <div class="fg"><label>الموظف</label><select class="fi" id="manAttEmp"></select></div>
+        <div class="fg"><label>التاريخ</label><input type="date" class="fi" id="manAttDate"></div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
-        <div class="fg"><label>وقت الدخول</label>
-          <input type="time" class="fi" id="manAttCiTime" value="09:00">
-        </div>
-        <div class="fg"><label>وقت الخروج (اختياري)</label>
-          <input type="time" class="fi" id="manAttCoTime" value="18:00">
-        </div>
+        <div class="fg"><label>وقت الدخول</label><input type="time" class="fi" id="manAttCiTime" value="09:00"></div>
+        <div class="fg"><label>وقت الخروج (اختياري)</label><input type="time" class="fi" id="manAttCoTime" value="18:00"></div>
       </div>
       <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
         <button class="btn btn-ok" onclick="adminManualAtt()" style="flex:1;min-width:140px">✅ تسجيل الحضور</button>
@@ -496,7 +472,6 @@
       <div id="manAttFeedback" style="margin-top:10px;font-size:12px;color:var(--green);display:none"></div>
     </div>
   </div>
-
   <div class="filter-row">
     <input type="text" class="fi" id="attSearch" placeholder="🔍 بحث..." oninput="renderAdminAtt()">
     <input type="date" class="fi" style="max-width:165px" id="attDate" onchange="renderAdminAtt()">
@@ -557,7 +532,6 @@
     <div class="shcard" style="border-color:rgba(0,230,118,.3)"><div class="shn" style="color:var(--green)">6 م — 4 ص</div><div class="shh">10 ساعات</div><div class="shs">يومي • +4,250/يوم</div></div>
     <div class="shcard" style="border-color:rgba(0,229,255,.2)"><div class="shn" style="color:var(--cyan)">وقت مخصص</div><div class="shh">يحدده المدير</div><div class="shs">موافقة المدير</div></div>
   </div>
-  <!-- جدول الأسبوع القادم -->
   <div class="card mb12" style="border-color:rgba(0,229,255,.2);background:rgba(0,229,255,.03)">
     <div class="ch">
       <h3>📅 جدول الأسبوع</h3>
@@ -574,7 +548,6 @@
       <div id="shiftScheduleGrid"></div>
     </div>
   </div>
-  <!-- أرشيف الجداول -->
   <div class="card mb12" style="border-color:rgba(206,147,216,.2);background:rgba(206,147,216,.02)">
     <div class="ch"><h3>🗄️ أرشيف الجداول السابقة</h3></div>
     <div class="cb" id="shiftArchiveList"><div class="empty"><div class="ei">📅</div><p>لا توجد جداول مؤرشفة</p></div></div>
@@ -672,7 +645,7 @@
   </div>
 </div>
 
-<!-- LOANS ADMIN — طلبات السلف -->
+<!-- LOANS ADMIN -->
 <div class="tab" id="at-loans">
   <div class="ph"><h2>💳 طلبات السلف</h2><p>الموافقة تخصم السلفة من راتب الموظف تلقائياً</p></div>
   <div class="card mb12">
@@ -703,7 +676,6 @@
     <div><h2>📦 إحصائيات الطلبات</h2><p>عدد الطلبات لكل موظف — فيسبوك / انستقرام / واتساب</p></div>
     <button class="btn btn-pr btn-sm" onclick="openAddSaleNew()">➕ إضافة</button>
   </div>
-  <!-- فلتر فترة -->
   <div class="card mb12" style="border-color:rgba(0,229,255,.2)">
     <div class="ch"><h3>🔍 فلتر التقارير</h3></div>
     <div class="cb">
@@ -716,12 +688,10 @@
       <div id="salesRangeStats" style="margin-top:14px"></div>
     </div>
   </div>
-  <!-- ملخص اليوم -->
   <div class="card mb12">
     <div class="ch"><h3>📊 ملخص اليوم</h3><span class="muted" id="salesTodayLabel">--</span></div>
     <div id="salesTodaySummary"></div>
   </div>
-  <!-- سجل مفصل -->
   <div class="card">
     <div class="ch"><h3>📋 سجل الطلبات</h3></div>
     <div class="filter-row" style="padding:12px 16px 0">
@@ -732,7 +702,7 @@
   </div>
 </div>
 
-<!-- MAP - خريطة الموظفين -->
+<!-- MAP -->
 <div class="tab" id="at-map">
   <div class="ph"><h2>🗺️ خريطة الموظفين</h2><p>مواقع الموظفين عند تسجيل الحضور</p></div>
   <div class="card mb12">
@@ -752,7 +722,7 @@
   </div>
 </div>
 
-<!-- GROUP CHAT - الدردشة الجماعية للمدير -->
+<!-- GROUP CHAT -->
 <div class="tab" id="at-groupchat">
   <div class="ph"><h2>💬 الدردشة الجماعية</h2><p>غرفة مشتركة مع جميع الموظفين</p></div>
   <div class="card" style="padding:0;overflow:hidden">
@@ -766,7 +736,7 @@
   </div>
 </div>
 
-<!-- ADVANCED REPORTS - تقارير متقدمة -->
+<!-- ADVANCED REPORTS -->
 <div class="tab" id="at-advrep">
   <div class="ph fb">
     <div><h2>📈 تقارير متقدمة</h2><p>رسوم بيانية تفاعلية</p></div>
@@ -779,22 +749,18 @@
       <button class="btn btn-ok btn-sm" onclick="exportAdvReportExcel()">📊 Excel</button>
     </div>
   </div>
-  <!-- Attendance Trend -->
   <div class="chart-adv">
     <div style="font-size:13px;font-weight:700;margin-bottom:12px;color:var(--cyan)">📅 اتجاه الحضور اليومي</div>
     <div style="height:200px"><canvas id="attTrendChart"></canvas></div>
   </div>
-  <!-- Salary Distribution -->
   <div class="chart-adv">
     <div style="font-size:13px;font-weight:700;margin-bottom:12px;color:var(--gold)">💰 توزيع الرواتب والحوافز</div>
     <div style="height:200px"><canvas id="salDistChart"></canvas></div>
   </div>
-  <!-- Per Employee Attendance -->
   <div class="chart-adv">
     <div style="font-size:13px;font-weight:700;margin-bottom:12px;color:var(--green)">👥 نسبة حضور كل موظف</div>
     <div style="height:200px"><canvas id="empAttChart"></canvas></div>
   </div>
-  <!-- Bonus breakdown -->
   <div class="chart-adv">
     <div style="font-size:13px;font-weight:700;margin-bottom:12px;color:var(--purple)">🎁 توزيع الحوافز</div>
     <div style="height:200px"><canvas id="bonDistChart"></canvas></div>
@@ -804,6 +770,29 @@
 <!-- SETTINGS -->
 <div class="tab" id="at-cfg">
   <div class="ph"><h2>⚙️ الإعدادات</h2></div>
+  
+  <!-- إعدادات البروكسي -->
+  <div class="card mb12" style="border-color:rgba(0,229,255,.2);background:rgba(0,229,255,.03)">
+    <div class="ch"><h3 style="color:var(--cyan)">🌐 إعدادات البروكسي (للتلغرام)</h3></div>
+    <div class="cb">
+      <div style="background:rgba(0,229,255,.05);border:1px solid rgba(0,229,255,.15);border-radius:10px;padding:12px;margin-bottom:12px;font-size:12px;color:var(--t2);line-height:1.8">
+        💡 <strong style="color:var(--cyan)">إذا كان التلغرام محظوراً في منطقتك، استخدم بروكسي MTProto</strong><br>
+        أدخل بيانات البروكسي من الرابط بصيغة: <code style="direction:ltr">tg://proxy?server=example.com&port=443&secret=ee123...</code>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+        <div class="fg" style="margin:0"><label>🌍 السيرفر (Server)</label><input type="text" class="fi" id="proxyServer" placeholder="alali.plus" style="direction:ltr"></div>
+        <div class="fg" style="margin:0"><label>🔌 المنفذ (Port)</label><input type="number" class="fi" id="proxyPort" placeholder="7000" style="direction:ltr"></div>
+      </div>
+      <div class="fg" style="margin-bottom:10px"><label>🔐 السيكريت (Secret)</label><input type="text" class="fi" id="proxySecret" placeholder="a209ee533600912cc6a034d0c710fe2f" style="direction:ltr;font-family:monospace;font-size:11px"></div>
+      <div class="flex g8" style="flex-wrap:wrap">
+        <button class="btn btn-ok btn-sm" onclick="saveProxySettings()">💾 حفظ إعدادات البروكسي</button>
+        <button class="btn btn-sc btn-sm" onclick="testProxyConnection()">🧪 اختبار البروكسي</button>
+        <button class="btn btn-dn btn-sm" onclick="disableProxy()">⛔ تعطيل البروكسي</button>
+      </div>
+      <div id="proxyStatus" style="margin-top:10px;font-size:11px;color:var(--t3)"></div>
+    </div>
+  </div>
+  
   <div class="card mb12">
     <div class="ch"><h3>🔐 بيانات الدخول للمدير</h3></div>
     <div class="cb">
@@ -875,7 +864,7 @@
       </div>
     </div>
   </div>
-  <!-- ══ إدارة الأدمنز الفرعيين ══ -->
+  
   <div class="card mb12" style="border-color:rgba(206,147,216,.25);background:rgba(206,147,216,.03)">
     <div class="ch"><h3 style="color:var(--purple)">👑 إدارة حسابات المديرين</h3><button class="btn btn-pr btn-sm" onclick="openAddSubAdmin()">➕ إضافة مدير</button></div>
     <div class="cb">
@@ -919,14 +908,12 @@
       <div class="mnav-item" onclick="showATab('cfg',this)"><div class="mnav-icon">⚙️</div><span>الإعدادات</span></div>
     </div>
 </div>
-
   </div>
 </div>
 
 <!-- ═══ MODALS ═══ -->
 
 <!-- Manual Multi-Day Attendance Modal -->
-
 <div class="mov" id="manAttMultiModal">
   <div class="modal" style="max-width:440px">
     <div class="mh"><h3>📅 تسجيل أيام حضور متعددة</h3><button class="mx" onclick="closeModal('manAttMultiModal')">✕</button></div>
@@ -951,7 +938,6 @@
 </div>
 
 <!-- Add Employee -->
-
 <div class="mov" id="addEmpModal">
   <div class="modal">
     <div class="mh"><h3>➕ إضافة موظف</h3><button class="mx" onclick="closeModal('addEmpModal')">✕</button></div>
@@ -985,7 +971,6 @@
 </div>
 
 <!-- Employee Detail -->
-
 <div class="mov" id="empDetailModal">
   <div class="modal wide">
     <div class="mh"><h3 id="detailTitle">تفاصيل</h3><button class="mx" onclick="closeModal('empDetailModal')">✕</button></div>
@@ -1085,7 +1070,6 @@
 </div>
 
 <!-- Custom Bonus -->
-
 <div class="mov" id="cbModal">
   <div class="modal" style="max-width:370px">
     <div class="mh"><h3>✏️ حافز مخصص</h3><button class="mx" onclick="closeModal('cbModal')">✕</button></div>
@@ -1098,7 +1082,6 @@
 </div>
 
 <!-- Quick Shift -->
-
 <div class="mov" id="qsModal">
   <div class="modal" style="max-width:380px">
     <div class="mh"><h3>🕐 تعديل الشفت</h3><button class="mx" onclick="closeModal('qsModal')">✕</button></div>
@@ -1128,7 +1111,6 @@
 </div>
 
 <!-- Archive Detail -->
-
 <div class="mov" id="archDetailModal">
   <div class="modal wide">
     <div class="mh"><h3 id="archDetailTitle">تفاصيل الفترة</h3><button class="mx" onclick="closeModal('archDetailModal')">✕</button></div>
@@ -1138,7 +1120,6 @@
 </div>
 
 <!-- Report Viewer -->
-
 <div class="mov" id="repViewModal">
   <div class="modal wide">
     <div class="mh"><h3>📋 التقرير</h3><button class="mx" onclick="closeModal('repViewModal')">✕</button></div>
@@ -1151,7 +1132,6 @@
 </div>
 
 <!-- 3AM Prompt -->
-
 <div class="mov" id="promptModal">
   <div style="width:100%;max-width:540px;padding:16px">
     <div class="prompt-modal">
@@ -1182,10 +1162,7 @@
   </div>
 </div>
 
-</script>
-
 <!-- Absent Alert 9AM Modal -->
-
 <div class="mov" id="absentAlertModal">
   <div class="modal" style="max-width:480px">
     <div class="mh"><h3>🔔 تنبيه — الساعة 9 صباحاً</h3><button class="mx" onclick="closeModal('absentAlertModal')">✕</button></div>
@@ -1198,7 +1175,6 @@
 </div>
 
 <!-- Sub-Admin Modal -->
-
 <div class="mov" id="subAdminModal">
   <div class="modal" style="max-width:460px">
     <div class="mh"><h3 id="subAdminModalTitle">➕ إضافة مدير فرعي</h3><button class="mx" onclick="closeModal('subAdminModal')">✕</button></div>
@@ -1274,7 +1250,6 @@
 </div>
 
 <!-- Edit Sale Modal -->
-
 <div class="mov" id="editSaleModal">
   <div class="modal" style="max-width:420px">
     <div class="mh"><h3>✏️ تعديل الطلب</h3><button class="mx" onclick="closeModal('editSaleModal')">✕</button></div>
@@ -1305,17 +1280,14 @@
 </div>
 
 <!-- Add Sale Modal -->
-
 <div class="mov" id="addSaleModal">
   <div class="modal" style="max-width:480px">
     <div class="mh"><h3>📦 إضافة طلبات موظف</h3><button class="mx" onclick="closeModal('addSaleModal')">✕</button></div>
     <div class="mb">
       <div class="fg"><label>الموظف</label><select class="fi" id="saleEmpSel"></select></div>
       <div class="fg"><label>التاريخ</label><input type="date" class="fi" id="saleDate"></div>
-      <!-- 3 خانات المنصات -->
       <div style="background:var(--bg3);border-radius:12px;padding:14px;margin-bottom:12px">
         <div style="font-size:12px;font-weight:700;color:var(--t2);margin-bottom:12px">عدد الطلبات لكل منصة</div>
-        <!-- فيسبوك -->
         <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;padding:10px;background:rgba(66,165,245,.08);border:1px solid rgba(66,165,245,.2);border-radius:10px">
           <div style="width:36px;height:36px;border-radius:8px;background:rgba(66,165,245,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="#42a5f5"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
@@ -1323,7 +1295,6 @@
           <div style="flex:1"><div style="font-size:13px;font-weight:700;color:var(--blue)">فيسبوك</div></div>
           <input type="number" class="fi" id="saleFb" placeholder="0" min="0" style="width:80px;text-align:center;padding:8px">
         </div>
-        <!-- انستقرام -->
         <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;padding:10px;background:rgba(206,147,216,.08);border:1px solid rgba(206,147,216,.2);border-radius:10px">
           <div style="width:36px;height:36px;border-radius:8px;background:rgba(206,147,216,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ce93d8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
@@ -1331,7 +1302,6 @@
           <div style="flex:1"><div style="font-size:13px;font-weight:700;color:var(--purple)">انستقرام</div></div>
           <input type="number" class="fi" id="saleInsta" placeholder="0" min="0" style="width:80px;text-align:center;padding:8px">
         </div>
-        <!-- واتساب -->
         <div style="display:flex;align-items:center;gap:12px;padding:10px;background:rgba(0,230,118,.08);border:1px solid rgba(0,230,118,.2);border-radius:10px">
           <div style="width:36px;height:36px;border-radius:8px;background:rgba(0,230,118,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="#00e676"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
@@ -1350,10 +1320,7 @@
   </div>
 </div>
 
-<!-- Employee Leave Request notification badge CSS inline handled via JS -->
-
 <!-- Day Shift Edit Modal -->
-
 <div class="mov" id="dayShiftEditModal">
   <div class="modal" style="max-width:380px">
     <div class="mh"><h3 id="dseTitle">تعديل الشفت</h3><button class="mx" onclick="closeModal('dayShiftEditModal')">✕</button></div>
@@ -1384,7 +1351,6 @@
 </div>
 
 <!-- Add Custom Shift Modal -->
-
 <div class="mov" id="addShiftModal">
   <div class="modal" style="max-width:420px">
     <div class="mh"><h3>➕ إضافة شفت جديد</h3><button class="mx" onclick="closeModal('addShiftModal')">✕</button></div>
@@ -1410,15 +1376,7 @@
   </div>
 </div>
 </body>
-<footer style="
-  text-align:center;
-  margin-top:40px;
-  padding:20px 10px;
-  color:#8888a0;
-  font-size:12px;
-  border-top:1px solid rgba(255,255,255,0.08);
-  background:rgba(255,255,255,0.02)
-">
+<footer style="text-align:center;margin-top:40px;padding:20px 10px;color:#8888a0;font-size:12px;border-top:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.02)">
   ©️ 2026 جميع الحقوق محفوظة - <span style="color:#f5a623;font-weight:700">سجاد محمد</span> 
 </footer>
 </html>
