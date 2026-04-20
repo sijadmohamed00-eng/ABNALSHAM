@@ -1,5 +1,3 @@
-
-
 // ═══ DECODE HELPER (obfuscation layer) ═══
 function _d(s){return s.split(',').map(n=>String.fromCharCode(parseInt(n)^0x5A)).join('')}
 // ═══════════════════════════════════════════════════
@@ -22,3 +20,29 @@ const SHIFTS_DEFAULT={
 };
 let SHIFTS=Object.assign({},SHIFTS_DEFAULT);
 
+// ═══════════════════════════════════════════════════
+//  PROXY CONFIG - إعدادات البروكسي
+// ═══════════════════════════════════════════════════
+
+function getProxyConfig(){
+  try{
+    const saved = DB.get('proxyConfig');
+    if(saved && saved.server && saved.port){
+      return saved;
+    }
+  }catch(e){}
+  return { enabled: false, server: '', port: 0, secret: '' };
+}
+
+function saveProxyConfig(server, port, secret){
+  DB.set('proxyConfig', { enabled: true, server: server.trim(), port: parseInt(port), secret: secret.trim() });
+}
+
+function disableProxy(){
+  DB.set('proxyConfig', { enabled: false, server: '', port: 0, secret: '' });
+}
+
+function isProxyEnabled(){
+  const cfg = getProxyConfig();
+  return cfg.enabled && cfg.server && cfg.port;
+}
