@@ -1,0 +1,1424 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ابن الشام">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0a0000">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon.png">
+<title>🍽️ ابن الشام — نظام الكول سنتر v4</title>
+
+<!-- CSS -->
+<link rel="stylesheet" href="css/variables.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/chat.css">
+<link rel="stylesheet" href="css/animations.css">
+<link rel="stylesheet" href="css/cinderella.css">
+
+<!-- Libraries -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics-compat.js"></script>
+
+<!-- JS — الترتيب مهم -->
+<script src="js/config.js"></script>
+<script src="js/db.js"></script>
+<script src="js/firebase.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/salary.js"></script>
+<script src="js/attendance.js"></script>
+<script src="js/employee.js"></script>
+<script src="js/employees.js"></script>
+<script src="js/admin.js"></script>
+<script src="js/telegram.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/chat.js"></script>
+<script src="js/sales.js"></script>
+<script src="js/reports.js"></script>
+<script src="js/shifts.js"></script>
+<script src="js/loans.js"></script>
+<script src="js/leaves.js"></script>
+<script src="js/subadmin.js"></script>
+<script src="js/map.js"></script>
+<script src="js/manual_att.js"></script>
+<script src="js/main.js"></script>
+</head>
+<body>
+</style>
+
+</head>
+<body>
+<div id="toastWrap"></div>
+
+<!-- ═══ LOGIN ═══ -->
+
+<div class="screen active" id="loginScreen">
+  <div style="align-items:center;justify-content:center;display:flex;flex:1;padding:20px;background:radial-gradient(ellipse at 50% 0%,rgba(240,192,64,.12) 0%,transparent 65%),var(--bg)">
+    <div style="width:100%;max-width:400px">
+      <div class="login-brand">
+        <div class="login-logo">👑</div>
+        <h1>مطعم ابن الشام</h1>
+        <p>بغداد — حي اور | نظام الكول سنتر</p>
+      </div>
+      <div class="login-card">
+        <div class="fg"><label>اسم المستخدم</label><input type="text" id="lUser" placeholder="username" autocomplete="username" style="direction:ltr;text-align:left" autocapitalize="none"></div>
+        <div class="fg" style="margin-bottom:6px"><label>كلمة المرور</label><input type="password" id="lPass" placeholder="••••••••" autocomplete="current-password"></div>
+        <label class="remember-row"><input type="checkbox" id="rememberMe"><span>تذكرني — دخول تلقائي</span></label>
+        <button class="btn-login" onclick="doLogin()">دخول 🚀</button>
+        <div class="lerr" id="lerr">❌ اسم المستخدم أو كلمة المرور غير صحيحة</div>
+        </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ EMPLOYEE SCREEN ═══ -->
+
+<div class="screen" id="empScreen">
+  <div class="topbar">
+    <div class="tb-brand">
+      <div class="tb-icon" style="background:linear-gradient(135deg,#00e676,#00bcd4)">👤</div>
+      <div><h1 id="empNameBar">الموظف</h1><span id="empDateBar">--</span></div>
+    </div>
+    <div class="tb-right">
+      <div class="clock" id="empClock">--:--:--</div>
+      <div id="empSyncDot" style="width:8px;height:8px;border-radius:50%;background:#ff9800;flex-shrink:0;transition:.3s" title="حالة المزامنة"></div>
+      <div class="ubadge">
+        <div class="uav" style="background:linear-gradient(135deg,var(--green),#00bcd4)" id="empAv">م</div>
+        <div><div class="uname" id="empNameBadge">--</div><div class="urole" style="color:var(--green)">موظف</div></div>
+      </div>
+      <button class="btn btn-sc btn-sm" onclick="logout()">خروج 🚪</button>
+    </div>
+  </div>
+  <div style="display:flex;flex:1;overflow:hidden">
+    <!-- Sidebar for desktop -->
+    <div class="sidebar" id="empSidebar">
+      <div class="stitle">القائمة</div>
+      <div class="sitem active" onclick="showETab('home',this)"><span class="ico">🏠</span>الرئيسية</div>
+      <div class="sitem" onclick="showETab('att',this)"><span class="ico">📍</span>سجل الحضور</div>
+      <div class="sitem" onclick="showETab('sal',this)"><span class="ico">💰</span>الراتب</div>
+      <div class="sitem" onclick="showETab('leave',this)"><span class="ico">🌴</span>طلب إجازة</div>
+      <div class="sitem" onclick="showETab('loan',this)"><span class="ico">💳</span>طلب سلفة</div>
+      <div class="sitem" onclick="showETab('msg',this)"><span class="ico">✉️</span>الرسائل</div>
+      <div class="sitem" onclick="showETab('chat',this)"><span class="ico">💬</span>الدردشة</div>
+      <div class="sitem" onclick="showETab('bot',this)"><span class="ico">🤖</span>المساعد</div>
+      <div class="sitem" onclick="showETab('arch',this)"><span class="ico">🗄️</span>الأرشيف</div>
+      <div class="sitem" onclick="showETab('schedule',this)"><span class="ico">📅</span>جدول دوامي</div>
+      <div class="sitem" onclick="showETab('delatt',this)"><span class="ico">🗑️</span>تصحيح</div>
+    </div>
+    <div style="display:flex;flex-direction:column;flex:1;overflow:hidden">
+    <div class="main" id="empMainScroll" style="flex:1;overflow-y:auto">
+      <!-- HOME -->
+      <div class="tab active" id="et-home">
+        <div class="emp-header">
+          <div style="position:relative;cursor:pointer" onclick="openPhotoUpload()" title="تغيير الصورة">
+            <div class="emp-av-big" id="empAvBig">م</div>
+            <div style="position:absolute;bottom:-4px;left:-4px;width:18px;height:18px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px">📷</div>
+          </div>
+          <div>
+            <div style="font-size:16px;font-weight:900" id="empWelcome">مرحباً!</div>
+            <div style="font-size:20px;font-weight:900;color:var(--gold);margin-top:2px" id="empNameBig">--</div>
+            <div style="font-size:12px;color:var(--t2)" id="empShiftBar">--</div>
+            <div style="font-size:12px;color:var(--t2);margin-top:2px" id="empWelcomeSub">--</div>
+          </div>
+        </div>
+        <div class="gps-card" id="gpsCard">
+          <div class="gdot checking" id="gdot"></div>
+          <div><div class="gtxt" id="gtxt">جاري تحديد الموقع...</div><div class="gsub" id="gsub">يرجى السماح بالوصول للموقع</div></div>
+          <div style="display:flex;gap:6px;margin-right:auto;flex-shrink:0">
+            <button class="btn btn-sc btn-sm" onclick="checkGPS()" title="تحديث الموقع">🔄</button>
+            <button class="btn btn-sc btn-sm" id="autoCoBtn" onclick="toggleAutoCo()" title="تشغيل/إيقاف الانصراف التلقائي" style="font-size:10px">🚗 تلقائي</button>
+          </div>
+        </div>
+        <div class="status-disp">
+          <div class="status-row">
+            <div><div style="font-size:13px;font-weight:700" id="empTT1">⚪ لم تسجل حضوراً بعد</div><div style="font-size:11px;color:var(--t2);margin-top:2px" id="empTSub1">اضغط تسجيل الحضور لبدء دوامك</div></div>
+          </div>
+        </div>
+        <div class="ci-btns">
+          <button class="ci-btn in-btn" id="btnCI" onclick="doCI()" disabled>
+            <span style="font-size:22px">✅</span><span>تسجيل الحضور</span><span class="ci-sub" id="ciSub">بانتظار GPS...</span>
+          </button>
+          <button class="ci-btn out-btn" id="btnCO" onclick="doCO()" disabled>
+            <span style="font-size:22px">🚪</span><span>تسجيل الانصراف</span><span class="ci-sub">متاح بعد تسجيل الحضور</span>
+          </button>
+        </div>
+        <div class="sal-overview">
+          <div style="font-size:11px;color:var(--t2);margin-bottom:8px" id="empPeriodLabel">الفترة الحالية</div>
+          <div class="sal-big" id="accBig">-- <span style="font-size:14px;color:var(--t2)">د.ع</span></div>
+          <div class="sal-sub" id="accSub2">جاري الحساب...</div>
+          <div class="sal-progress"><div class="sal-bar" id="accBar" style="width:0%"></div></div>
+          <div class="sal-dates"><span id="accS">--</span><span id="accE">--</span></div>
+        </div>
+        <div class="mini-stats">
+          <div class="ms"><div class="ms-val tgrn" id="es-pres">0</div><div class="ms-lbl">أيام الحضور</div></div>
+          <div class="ms"><div class="ms-val tred" id="es-abs">0</div><div class="ms-lbl">غياب/خصم</div></div>
+          <div class="ms"><div class="ms-val tgrn" id="es-bon">0</div><div class="ms-lbl">الحوافز</div></div>
+          <div class="ms"><div class="ms-val gnum" id="es-net">0</div><div class="ms-lbl">الإجمالي</div></div>
+        </div>
+        <div class="card">
+          <div class="ch"><h3>📅 حضور هذا النصف</h3></div>
+          <div class="cb">
+            <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:10px;font-size:11px;color:var(--t2)">
+              <span><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:rgba(0,230,118,.2);border:1px solid rgba(0,230,118,.3);margin-left:4px"></span>حضور</span>
+              <span><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:rgba(206,147,216,.18);border:1px solid rgba(206,147,216,.3);margin-left:4px"></span>إجازة</span>
+              <span><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:rgba(233,69,96,.1);border:1px solid rgba(233,69,96,.2);margin-left:4px"></span>غياب</span>
+            </div>
+            <div class="dgrid" id="empDG"></div>
+          </div>
+        </div>
+      </div>
+      <!-- ATTENDANCE -->
+      <div class="tab" id="et-att">
+        <div class="ph"><h2>⏱️ سجل الحضور</h2></div>
+        <div class="card">
+          <div class="ch"><h3>📊 حضور هذا الشهر</h3></div>
+          <div class="cb"><div class="att-grid" id="empAttPattern"></div></div>
+        </div>
+        <div class="card">
+          <div class="ch"><h3>⏱️ حركات الحضور</h3></div>
+          <div class="cb" id="empHL"></div>
+        </div>
+      </div>
+      <!-- SALARY -->
+      <div class="tab" id="et-sal">
+        <div class="ph"><h2>💰 الراتب التفصيلي</h2></div>
+        <div class="card">
+          <div class="ch"><h3>📄 كشف الراتب</h3><span class="pbadge" id="empPBadge">--</span></div>
+          <div class="cb">
+            <div class="slip">
+              <div class="sliph"><h4>👑 مطعم ابن الشام — بغداد</h4><p id="slipEmpName">--</p></div>
+              <div class="srow"><div class="sl2">الراتب الشهري</div><div class="sv2 gnum" id="sl-monthly">--</div></div>
+              <div class="srow"><div class="sl2">معدل اليوم (÷30)</div><div class="sv2" id="sl-daily">--</div></div>
+              <div class="srow"><div class="sl2">أيام الحضور</div><div class="sv2 tgrn bold" id="sl-present">--</div></div>
+              <div class="srow"><div class="sl2">إجازات مدفوعة</div><div class="sv2 tpur" id="sl-paidleave">--</div></div>
+              <div class="srow"><div class="sl2">غياب / إجازة زائدة</div><div class="sv2 tred" id="sl-deductdays">--</div></div>
+              <div class="srow grn"><div class="sl2">راتب الأيام</div><div class="sv2" id="sl-earned">--</div></div>
+              <div class="divider"></div>
+              <div class="srow grn"><div class="sl2">مكافآت الشفتات</div><div class="sv2" id="sl-shiftbon">--</div></div>
+              <div class="srow grn"><div class="sl2">حوافز المبيعات</div><div class="sv2" id="sl-salesbon">--</div></div>
+              <div class="srow grn"><div class="sl2">حوافز أخرى</div><div class="sv2" id="sl-otherbon">--</div></div>
+              <div class="divider"></div>
+              <div class="srow ded"><div class="sl2">الخصومات</div><div class="sv2" id="sl-ded">--</div></div>
+              <div class="divider"></div>
+              <div class="srow tot"><div class="sl2">💵 الإجمالي</div><div class="sv2" id="sl-total">--</div></div>
+            </div>
+            <button class="btn btn-ok btn-full mt12" onclick="exportSalaryPDF(CU.id)">📥 تصدير الكشف</button>
+          </div>
+        </div>
+      </div>
+      <!-- ARCHIVE EMP -->
+      <div class="tab" id="et-arch">
+        <div class="ph"><h2>🗄️ أرشيف راتبي</h2><p>كل الفترات السابقة محفوظة</p></div>
+        <div id="empArchList"></div>
+      </div>
+      <!-- طلب إجازة -->
+      <div class="tab" id="et-leave">
+        <div class="ph"><h2>🌴 طلب إجازة</h2></div>
+        <div class="card mb12">
+          <div class="ch"><h3>➕ تقديم طلب جديد</h3></div>
+          <div class="cb">
+            <div class="fg"><label>نوع الإجازة</label>
+              <select class="fi" id="leaveTypeEmp">
+                <option value="sick">🤒 مرضية</option>
+                <option value="personal">👤 شخصية</option>
+                <option value="emergency">🚨 طارئة</option>
+                <option value="other">📝 أخرى</option>
+              </select>
+            </div>
+            <div class="fg"><label>التاريخ</label><input type="date" class="fi" id="leaveDateEmp"></div>
+            <div class="fg"><label>السبب</label><textarea class="fi" id="leaveReasonEmp" placeholder="اذكر السبب..." rows="3"></textarea></div>
+            <button class="btn btn-ok btn-full" onclick="submitLeaveRequest()">📤 إرسال الطلب</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="ch"><h3>📋 طلباتي السابقة</h3></div>
+          <div class="cb" id="empLeaveHistory"><div class="empty"><div class="ei">🌴</div><p>لا توجد طلبات</p></div></div>
+        </div>
+      </div>
+      <!-- MESSAGES -->
+      <div class="tab" id="et-msg">
+        <div class="ph"><h2>💬 رسائل من المدير</h2></div>
+        <div class="card mb12">
+          <div class="ch"><h3>↩️ رد على المدير</h3></div>
+          <div class="cb">
+            <div class="fg"><textarea class="fi" id="empReplyText" placeholder="اكتب ردك هنا..." rows="3"></textarea></div>
+            <button class="btn btn-ok" onclick="empReplyToManager()">📤 إرسال الرد</button>
+          </div>
+        </div>
+        <div class="card"><div class="cb" id="empMsgList"></div></div>
+      </div>
+      <!-- حذف تسجيل الحضور -->
+      <div class="tab" id="et-delatt">
+        <div class="ph"><h2>🗑️ حذف تسجيل خاطئ</h2><p>في حال ضغطت على تسجيل الحضور بالخطأ</p></div>
+        <div class="card">
+          <div class="ch"><h3>⚠️ حذف آخر تسجيل</h3></div>
+          <div class="cb">
+            <div style="background:rgba(233,69,96,.06);border:1px solid rgba(233,69,96,.2);border-radius:12px;padding:14px;margin-bottom:14px;font-size:13px;color:var(--t2)">
+              ⚠️ <strong style="color:var(--red)">تنبيه:</strong> هذا الخيار يحذف آخر تسجيل حضور أو انصراف. استخدمه فقط في حالة الخطأ. سيتم إشعار المدير.
+            </div>
+            <div id="empLastAttRecord" style="margin-bottom:14px"></div>
+            <button class="btn btn-dn btn-full" onclick="empDeleteLastAtt()">🗑️ حذف آخر تسجيل خاطئ</button>
+          </div>
+        </div>
+      </div>
+      <!-- الدردشة الجماعية للموظف -->
+      <div class="tab" id="et-chat">
+        <div class="ph"><h2>💬 الدردشة الجماعية</h2></div>
+        <div class="card" style="padding:0;overflow:hidden">
+          <div class="chat-wrap">
+            <div class="chat-messages" id="empChatMessages"></div>
+          </div>
+          <div class="chat-input-bar">
+            <input type="text" id="empChatInput" placeholder="اكتب رسالة..." onkeydown="if(event.key==='Enter')sendChatMsg()">
+            <button class="btn btn-pr" onclick="sendChatMsg()">إرسال</button>
+          </div>
+        </div>
+      </div>
+      <!-- بوت الذكاء الاصطناعي -->
+      <div class="tab" id="et-bot">
+        <div class="ph"><h2>🤖 المساعد الذكي</h2><p>اسألني أي شيء عن دوامك وراتبك</p></div>
+        <div class="card" style="padding:0;overflow:hidden">
+          <div class="bot-wrap">
+            <div class="bot-messages" id="botMessages">
+              <div class="bot-msg bot">مرحباً! 👋 أنا المساعد الذكي لنظام سندريلا. يمكنك سؤالي عن راتبك، أيام حضورك، إجازاتك، أو أي شيء آخر.</div>
+              <div style="display:flex;flex-wrap:wrap;gap:4px;padding:4px 0">
+                <span class="bot-chip" onclick="askBot('كم راتبي هذا الشهر؟')">💰 راتبي الشهر</span>
+                <span class="bot-chip" onclick="askBot('كم يوم حضرت هذه الفترة؟')">📅 أيام حضوري</span>
+                <span class="bot-chip" onclick="askBot('كم يوم غياب عندي؟')">❌ أيام غيابي</span>
+                <span class="bot-chip" onclick="askBot('متى يوم صرف الراتب؟')">💸 موعد الصرف</span>
+                <span class="bot-chip" onclick="askBot('كم حوافز عندي؟')">🎁 حوافزي</span>
+                <span class="bot-chip" onclick="askBot('كم يوم إجازة بقيلي؟')">🌴 إجازاتي</span>
+              </div>
+            </div>
+          </div>
+          <div class="chat-input-bar">
+            <input type="text" id="botInput" placeholder="اسأل المساعد..." onkeydown="if(event.key==='Enter')askBotFromInput()">
+            <button class="btn btn-pr" onclick="askBotFromInput()">إرسال</button>
+          </div>
+        </div>
+      </div>
+      <!-- جدول دوام الموظف -->
+      <div class="tab" id="et-schedule">
+        <div class="ph"><h2>📅 جدول دوامي</h2><p>شوف شفتك لكل يوم من المدير</p></div>
+        <div id="empScheduleView"></div>
+      </div>
+      <div class="tab" id="et-loan">
+        <div class="ph"><h2>💳 طلب سلفة</h2><p>تُخصم السلفة تلقائياً من راتبك الشهري</p></div>
+        <div class="card mb12">
+          <div class="ch"><h3>➕ تقديم طلب سلفة جديد</h3></div>
+          <div class="cb">
+            <div style="background:rgba(255,152,0,.06);border:1px solid rgba(255,152,0,.2);border-radius:12px;padding:12px;margin-bottom:14px;font-size:12px;color:var(--t2);line-height:1.8">
+              💡 السلفة تحتاج موافقة المدير — عند الموافقة تُخصم من راتبك تلقائياً
+            </div>
+            <div class="fg"><label>اختر المبلغ المطلوب *</label>
+              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px">
+                <div class="loan-opt" onclick="selectLoan(this,5000)">5,000</div>
+                <div class="loan-opt" onclick="selectLoan(this,10000)">10,000</div>
+                <div class="loan-opt" onclick="selectLoan(this,15000)">15,000</div>
+                <div class="loan-opt" onclick="selectLoan(this,20000)">20,000</div>
+                <div class="loan-opt" onclick="selectLoan(this,25000)">25,000</div>
+                <div class="loan-opt" onclick="selectLoan(this,30000)">30,000</div>
+                <div class="loan-opt" onclick="selectLoan(this,40000)">40,000</div>
+                <div class="loan-opt" onclick="selectLoan(this,50000)">50,000</div>
+                <div class="loan-opt" onclick="selectLoan(this,75000)">75,000</div>
+                <div class="loan-opt" onclick="selectLoan(this,100000)" style="grid-column:span 3">100,000 الحد الأقصى</div>
+              </div>
+              <!-- مبلغ مخصص -->
+              <div style="display:flex;align-items:center;gap:8px;background:var(--bg3);border:1.5px dashed var(--br2);border-radius:10px;padding:10px 12px;margin-bottom:6px">
+                <span style="font-size:12px;color:var(--t2);white-space:nowrap">✏️ مبلغ مخصص:</span>
+                <input type="number" id="loanCustomInput" class="fi" placeholder="اكتب المبلغ" style="flex:1;margin-bottom:0;min-width:0" min="1000" max="500000"
+                  oninput="if(this.value){selectLoanCustom(parseInt(this.value))}" >
+                <span style="font-size:11px;color:var(--t3);white-space:nowrap">د.ع</span>
+              </div>
+              <div style="text-align:center;font-size:14px;font-weight:800;color:var(--gold);min-height:24px" id="loanSelectedLabel"></div>
+              <input type="hidden" id="loanAmt">
+            </div>
+            <div class="fg"><label>السبب *</label><textarea class="fi" id="loanReason" placeholder="اذكر سبب طلب السلفة..." rows="3"></textarea></div>
+            <button class="btn btn-wa btn-full" id="loanSubmitBtn" onclick="submitLoanRequest()">📤 إرسال الطلب</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="ch"><h3>📋 طلباتي السابقة</h3></div>
+          <div class="cb" id="empLoanHistory"><div class="empty"><div class="ei">💳</div><p>لا توجد طلبات سلفة</p></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="mobile-nav" id="empMobileNav">
+      <div class="mnav-item active" onclick="showETab('home',this)"><div class="mnav-icon">🏠</div><span>الرئيسية</span></div>
+      <div class="mnav-item" onclick="showETab('att',this)"><div class="mnav-icon">📍</div><span>الحضور</span></div>
+      <div class="mnav-item" onclick="showETab('sal',this)"><div class="mnav-icon">💰</div><span>الراتب</span></div>
+      <div class="mnav-item" onclick="showETab('leave',this)"><div class="mnav-icon">🌴</div><span>إجازة</span></div>
+      <div class="mnav-item" onclick="showETab('loan',this)"><div class="mnav-icon">💳</div><span>سلفة</span></div>
+      <div class="mnav-item" onclick="showETab('msg',this)"><div class="mnav-icon">✉️</div><span>رسائل</span></div>
+      <div class="mnav-item" onclick="showETab('chat',this)"><div class="mnav-icon">💬</div><span>دردشة</span></div>
+      <div class="mnav-item" onclick="showETab('bot',this)"><div class="mnav-icon">🤖</div><span>مساعد</span></div>
+      <div class="mnav-item" onclick="showETab('arch',this)"><div class="mnav-icon">🗄️</div><span>الأرشيف</span></div>
+      <div class="mnav-item" onclick="showETab('delatt',this)"><div class="mnav-icon">🗑️</div><span>تصحيح</span></div>
+      <div class="mnav-item" onclick="showETab('schedule',this)"><div class="mnav-icon">📅</div><span>جدول دوامي</span></div>
+    </div>
+  </div>
+  </div>
+</div>
+
+<!-- ═══ ADMIN SCREEN ═══ -->
+
+<div class="screen" id="adminScreen">
+  <div class="topbar">
+    <div class="tb-brand">
+      <img src="icon.png" class="tb-icon-img" alt="سندريلا" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><div class="tb-icon" style="background:linear-gradient(135deg,var(--gold),#ffab40);display:none">👑</div>
+      <div><h1>ابن الشام | لوحة التحكم</h1><span>بغداد — حي اور</span></div>
+    </div>
+    <div class="tb-right">
+      <div class="clock" id="adminClock">--:--:--</div>
+      <div class="ubadge">
+        <div class="uav" style="background:linear-gradient(135deg,var(--gold),#ffab40)">س</div>
+        <div><div class="uname">سجاد محمد</div><div class="urole" style="color:var(--gold)">المدير</div></div>
+      </div>
+      <button class="btn btn-sc btn-sm" onclick="logout()">خروج 🚪</button>
+      <button class="btn btn-sc btn-sm" onclick="toggleTheme()" id="themeBtn" title="تبديل الوضع">🌙</button>
+    </div>
+  </div>
+  <div class="sysbar">
+    <span>📅 <span id="adminDateBar">--</span></span>
+    <span>👥 <span id="adminEC" style="color:var(--cyan)">0</span> موظف</span>
+    <span>📍 حي اور، بغداد</span>
+    <span><span class="pdot"></span> يعمل</span><span id="syncStatus" style="color:var(--t3)">🔄 محلي</span>
+  </div>
+  <div class="layout">
+    <div class="sidebar">
+      <div class="stitle">الإدارة</div>
+      <div class="sitem active" onclick="showATab('ov',this)"><span class="ico">📊</span>نظرة عامة</div>
+      <div class="sitem" onclick="showATab('emp',this)"><span class="ico">👥</span>الموظفون</div>
+      <div class="sitem" onclick="showATab('att',this)"><span class="ico">📍</span>سجل الحضور</div>
+      <div class="sitem" onclick="showATab('sal',this)"><span class="ico">💰</span>الرواتب</div>
+      <div class="sitem" onclick="showATab('inc',this)"><span class="ico">🎁</span>الحوافز</div>
+      <div class="sitem" onclick="showATab('sh',this)"><span class="ico">🕐</span>الشفتات</div>
+      <div class="sitem" onclick="showATab('rate',this)"><span class="ico">⭐</span>التقييمات</div>
+      <div class="sitem" onclick="showATab('leave',this)"><span class="ico">🌴</span>طلبات الإجازة<span class="nav-cnt" id="sideLeaveCount" data-v="0"></span></div>
+      <div class="sitem" onclick="showATab('leave_mgmt',this)"><span class="ico">📆</span>إدارة الإجازات</div>
+      <div class="sitem" onclick="showATab('loans',this)"><span class="ico">💳</span>طلبات السلف<span class="nav-cnt" id="sideLoanCount" data-v="0"></span></div>
+      <div class="sitem" onclick="showATab('arch',this)"><span class="ico">🗄️</span>الأرشيف</div>
+      <div class="sitem" onclick="showATab('rep',this)"><span class="ico">📋</span>التقارير</div>
+      <div class="sitem" onclick="showATab('msg',this)"><span class="ico">💬</span>الرسائل<span class="nav-cnt" id="sideMsgCount" data-v="0"></span></div>
+      <div class="sitem" onclick="showATab('logs',this)"><span class="ico">📝</span>سجل العمليات</div>
+      <div class="sitem" onclick="showATab('sales',this)"><span class="ico">📦</span>إحصائيات المبيعات</div>
+      <div class="sitem" onclick="showATab('map',this)"><span class="ico">🗺️</span>خريطة الموظفين</div>
+      <div class="sitem" onclick="showATab('groupchat',this)"><span class="ico">💬</span>الدردشة الجماعية</div>
+      <div class="sitem" onclick="showATab('advrep',this)"><span class="ico">📈</span>تقارير متقدمة</div>
+      <div class="sitem" onclick="showATab('cfg',this)"><span class="ico">⚙️</span>الإعدادات</div>
+    </div>
+    <div style="display:flex;flex-direction:column;flex:1;overflow:hidden">
+      <div class="main" id="adminMainScroll">
+    <!-- OVERVIEW -->
+    <div class="tab active" id="at-ov">
+      <div class="ph fb">
+        <div><h2>📊 نظرة عامة</h2><p id="adminDateFull">--</p></div>
+        <div class="flex g8" style="flex-wrap:wrap">
+          <button class="btn btn-tg btn-sm" onclick="sendTgReport()">📤 تقرير فوري</button>
+          <button class="btn btn-pr btn-sm" onclick="open3amPromptManual()">🕒 استفسار اليوم</button>
+        </div>
+      </div>
+      <div class="pal" id="adminPayAlert" style="display:none">
+        <div class="pai">💸</div>
+        <div><h4 id="adminPayTitle">--</h4><p id="adminPaySub">--</p></div>
+      </div>
+      <div class="sgrid">
+        <div class="sc cyan"><div class="si2">👥</div><div class="sv" id="st-tot">0</div><div class="sl">الموظفون</div><span class="sbadge bc">الكل</span></div>
+        <div class="sc green"><div class="si2">✅</div><div class="sv" id="st-pres">0</div><div class="sl">حضور اليوم</div><span class="sbadge bg">اليوم</span></div>
+        <div class="sc red"><div class="si2">❌</div><div class="sv" id="st-abs">0</div><div class="sl">غياب اليوم</div><span class="sbadge br_">اليوم</span></div>
+        <div class="sc purple" style="cursor:default"><div class="si2">🌴</div><div class="sv" id="st-leave">0</div><div class="sl">مجازون اليوم</div><span class="sbadge bp">اليوم</span></div>
+        <div class="sc gold"><div class="si2">💰</div><div class="sv" id="st-sal">0</div><div class="sl">الرواتب الشهرية</div><span class="sbadge bo">الشهر</span></div>
+        <div class="sc orange"><div class="si2">💵</div><div class="sv" id="st-net">0</div><div class="sl">الإجمالي المستحق</div><span class="sbadge bor">الشهر</span></div>
+      </div>
+      <div class="card mb12" style="border-color:rgba(0,230,118,.2)">
+        <div class="ch"><h3 style="color:var(--green)">📅 حضور هذا الشهر</h3><span class="cbadge" id="monthAttBadge">--</span></div>
+        <div class="cb" id="monthAttGrid" style="display:flex;flex-wrap:wrap;gap:5px;min-height:40px"></div>
+      </div>
+      <div class="chart-container"><canvas id="salaryChart"></canvas></div>
+      <div class="chart-container"><canvas id="attendanceChart"></canvas></div>
+      <div class="card">
+        <div class="ch"><h3>⚡ حضور اليوم</h3><span class="muted" id="qaDate">--</span></div>
+        <div class="tw"><table><thead><tr><th>الموظف</th><th>الشفت</th><th>الحضور</th><th>الانصراف</th><th>المدة</th><th>الحالة</th></tr></thead><tbody id="qaTable"></tbody></table></div><div id="todayLeaveSection" style="padding:10px 16px;border-top:1px solid var(--br);display:none"><div style="font-size:12px;font-weight:700;color:var(--purple);margin-bottom:8px">🌴 مجازون اليوم</div><div id="todayLeaveList"></div></div>
+      </div>
+    </div>
+
+<!-- EMPLOYEES -->
+<div class="tab" id="at-emp">
+  <div class="ph fb">
+    <div><h2>👥 الموظفون</h2></div>
+    <button class="btn btn-pr" onclick="openAddEmp()">➕ إضافة موظف</button>
+  </div>
+  <div class="filter-row"><input type="text" class="fi" id="empSearch" placeholder="🔍 بحث..." oninput="renderEmpTable()"></div>
+  <div class="card">
+    <div class="ch"><h3>📋 القائمة</h3><span class="cbadge" id="empListCount">0 موظف</span></div>
+    <div class="tw"><table><thead><tr><th>#</th><th>الموظف</th><th>اليوزر</th><th>الشفت</th><th>الراتب/شهر</th><th>اليوم</th><th>إجراءات</th></tr></thead><tbody id="empListTable"></tbody></table></div>
+  </div>
+</div>
+
+<!-- ATTENDANCE -->
+<div class="tab" id="at-att">
+  <div class="ph fb">
+    <div><h2>📍 سجل الحضور</h2></div>
+    <button class="btn btn-ok btn-sm" onclick="exportAttExcel()">📊 تصدير Excel</button>
+  </div>
+
+  <!-- ✅ تسجيل حضور يدوي -->
+  <div class="card mb16" style="border-color:rgba(0,230,118,.25);background:linear-gradient(135deg,rgba(0,230,118,.04),transparent)">
+    <div class="ch"><h3 style="color:var(--green)">✏️ تسجيل حضور يدوي</h3><span class="cbadge" style="background:rgba(0,230,118,.1);color:var(--green)">من صلاحية المدير</span></div>
+    <div class="cb">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+        <div class="fg"><label>الموظف</label>
+          <select class="fi" id="manAttEmp"></select>
+        </div>
+        <div class="fg"><label>التاريخ</label>
+          <input type="date" class="fi" id="manAttDate">
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+        <div class="fg"><label>وقت الدخول</label>
+          <input type="time" class="fi" id="manAttCiTime" value="09:00">
+        </div>
+        <div class="fg"><label>وقت الخروج (اختياري)</label>
+          <input type="time" class="fi" id="manAttCoTime" value="18:00">
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+        <button class="btn btn-ok" onclick="adminManualAtt()" style="flex:1;min-width:140px">✅ تسجيل الحضور</button>
+        <button class="btn btn-sc btn-sm" onclick="adminManualAttMulti()" style="flex:1;min-width:140px">📅 تسجيل أيام متعددة</button>
+      </div>
+      <div id="manAttFeedback" style="margin-top:10px;font-size:12px;color:var(--green);display:none"></div>
+    </div>
+  </div>
+
+  <div class="filter-row">
+    <input type="text" class="fi" id="attSearch" placeholder="🔍 بحث..." oninput="renderAdminAtt()">
+    <input type="date" class="fi" style="max-width:165px" id="attDate" onchange="renderAdminAtt()">
+  </div>
+  <div class="card"><div class="tw"><table><thead><tr><th>الموظف</th><th>النوع</th><th>التاريخ</th><th>الوقت</th><th>المسافة</th><th>المدة</th><th>حذف</th></tr></thead><tbody id="adminAttTable"></tbody></table></div></div>
+</div>
+
+<!-- SALARIES -->
+<div class="tab" id="at-sal">
+  <div class="ph"><h2>💰 الرواتب</h2></div>
+  <div class="card mb16" style="background:rgba(240,192,64,.04);border-color:rgba(240,192,64,.2)">
+    <div class="cb">
+      <div class="igrid">
+        <div class="ii"><div class="lb">الفترة الحالية</div><div class="vl gold" id="aPeriodLabel">--</div></div>
+        <div class="ii"><div class="lb">يوم الصرف</div><div class="vl gold" id="aNextPay">--</div></div>
+        <div class="ii"><div class="lb">أيام الفترة</div><div class="vl" id="aPeriodDays">--</div></div>
+        <div class="ii"><div class="lb">إجمالي المستحق</div><div class="vl gold" id="aTotalNet">--</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ch"><h3>📊 جدول الرواتب</h3></div>
+    <div class="tw"><table><thead><tr><th>الموظف</th><th>الراتب/شهر</th><th>💵 مكتسب</th><th>⏰ شفت</th><th>🎁 حوافز</th><th>📉 خصم</th><th>💰 إجمالي</th><th>تفاصيل</th></tr></thead><tbody id="salTable"></tbody></table></div>
+  </div>
+</div>
+
+<!-- INCENTIVES -->
+<div class="tab" id="at-inc">
+  <div class="ph"><h2>🎁 الحوافز اليومية</h2></div>
+  <div class="card">
+    <div class="ch"><h3>⚡ إضافة حافز سريع</h3></div>
+    <div class="cb">
+      <div class="fg"><label>اختر الموظف</label><select class="fi" id="incEmpSel"></select></div>
+      <div class="iqgrid">
+        <div class="iqc" onclick="qInc('sales100')"><div class="iq">100</div><div class="il">قطعة جبن/مقبلات</div><div class="ia">+ 5,000 د.ع</div></div>
+        <div class="iqc" onclick="qInc('sales200')"><div class="iq">200</div><div class="il">قطعة جبن/مقبلات</div><div class="ia">+ 10,000 د.ع</div></div>
+        <div class="iqc" onclick="qInc('shift')"><div class="iq">⏰</div><div class="il">دوام كامل</div><div class="ia">+ 10,000 د.ع</div></div>
+        <div class="iqc" onclick="openShiftCustomBon()"><div class="iq">🎯</div><div class="il">حافز شفتات مخصص</div><div class="ia">مبلغ حر بالشفت</div></div>
+        <div class="iqc" onclick="openModal('cbModal')"><div class="iq">✏️</div><div class="il">حافز مخصص</div><div class="ia">مبلغ حر</div></div>
+      </div>
+      <div class="divider"></div>
+      <h4 style="font-size:13px;font-weight:700;margin-bottom:8px">📋 آخر الحوافز</h4>
+      <div id="recentBon"></div>
+    </div>
+  </div>
+</div>
+
+<!-- SHIFTS -->
+<div class="tab" id="at-sh">
+  <div class="ph fb"><h2>🕐 الشفتات</h2><button class="btn btn-pr btn-sm" onclick="openAddShiftModal()">➕ إضافة شفت جديد</button></div>
+  <div class="shgrid mb16" id="shiftCardsGrid">
+    <div class="shcard"><div class="shn">6 م — 2 ص</div><div class="shh">12 ساعة</div><div class="shs">كامل • +10,000</div></div>
+    <div class="shcard"><div class="shn">3:30 م — 3:30 ص</div><div class="shh">12 ساعة</div><div class="shs">كامل • +10,000</div></div>
+    <div class="shcard"><div class="shn">6 م — 2 ص (8س)</div><div class="shh">8 ساعات</div><div class="shs">نصفي</div></div>
+    <div class="shcard"><div class="shn">7 م — 3 ص</div><div class="shh">8 ساعات</div><div class="shs">نصفي</div></div>
+    <div class="shcard"><div class="shn">7:30 م — 3:30 ص</div><div class="shh">8 ساعات</div><div class="shs">نصفي</div></div>
+    <div class="shcard"><div class="shn">6 م — 3:30 ص</div><div class="shh">9.5 ساعة</div><div class="shs">كامل • +10,000</div></div>
+    <div class="shcard" style="border-color:rgba(0,230,118,.3)"><div class="shn" style="color:var(--green)">6 م — 4 ص</div><div class="shh">10 ساعات</div><div class="shs">يومي • +4,250/يوم</div></div>
+    <div class="shcard" style="border-color:rgba(0,229,255,.2)"><div class="shn" style="color:var(--cyan)">وقت مخصص</div><div class="shh">يحدده المدير</div><div class="shs">موافقة المدير</div></div>
+  </div>
+  <!-- جدول الأسبوع القادم -->
+  <div class="card mb12" style="border-color:rgba(0,229,255,.2);background:rgba(0,229,255,.03)">
+    <div class="ch">
+      <h3>📅 جدول الأسبوع</h3>
+      <div class="flex g8">
+        <select class="fi btn-sm" id="shWeekOffset" onchange="renderShiftSchedule()" style="max-width:160px">
+          <option value="0">هذا الأسبوع</option>
+          <option value="7">الأسبوع القادم</option>
+          <option value="14">بعد أسبوعين</option>
+        </select>
+        <button class="btn btn-ok btn-sm" onclick="archiveShiftSchedule()">🗄️ أرشفة</button>
+      </div>
+    </div>
+    <div class="cb">
+      <div id="shiftScheduleGrid"></div>
+    </div>
+  </div>
+  <!-- أرشيف الجداول -->
+  <div class="card mb12" style="border-color:rgba(206,147,216,.2);background:rgba(206,147,216,.02)">
+    <div class="ch"><h3>🗄️ أرشيف الجداول السابقة</h3></div>
+    <div class="cb" id="shiftArchiveList"><div class="empty"><div class="ei">📅</div><p>لا توجد جداول مؤرشفة</p></div></div>
+  </div>
+  <div class="card">
+    <div class="ch"><h3>📋 توزيع الشفتات</h3></div>
+    <div class="tw"><table><thead><tr><th>الموظف</th><th>الشفت</th><th>النوع</th><th>المكافأة</th><th>تعديل</th></tr></thead><tbody id="shTable"></tbody></table></div>
+  </div>
+</div>
+
+<!-- RATINGS -->
+<div class="tab" id="at-rate">
+  <div class="ph"><h2>⭐ تقييم الأداء</h2></div>
+  <div class="card"><div class="cb" id="ratingContainer"></div></div>
+</div>
+
+<!-- ARCHIVE ADMIN -->
+<div class="tab" id="at-arch">
+  <div class="ph fb">
+    <div><h2>🗄️ الأرشيف الكامل</h2><p>كل البيانات التاريخية محفوظة دائماً</p></div>
+    <select class="fi" id="archEmpFilter" style="max-width:180px" onchange="renderAdminArchive()">
+      <option value="">كل الموظفين</option>
+    </select>
+  </div>
+  <div id="adminArchList"></div>
+</div>
+
+<!-- REPORTS -->
+<div class="tab" id="at-rep">
+  <div class="ph fb">
+    <div><h2>📋 التقارير</h2></div>
+    <div class="flex g8">
+      <button class="btn btn-tg btn-sm" onclick="sendTgReport()">📤 إرسال الآن</button>
+      <button class="btn btn-pr btn-sm" onclick="genAndSaveReport()">💾 حفظ يدوي</button>
+    </div>
+  </div>
+  <div class="card mb12" style="background:rgba(0,136,204,.05);border-color:rgba(0,136,204,.2)">
+    <div class="cb">
+      <div class="igrid">
+        <div class="ii"><div class="lb">إجمالي التقارير</div><div class="vl cyan" id="repCount">0</div></div>
+        <div class="ii"><div class="lb">آخر تقرير</div><div class="vl" id="repLast">--</div></div>
+        <div class="ii"><div class="lb">يومي تلقائي</div><div class="vl green">4:00 صباحاً</div></div>
+        <div class="ii"><div class="lb">تليجرام</div><div class="vl cyan">مفعّل</div></div>
+      </div>
+    </div>
+  </div>
+  <div id="repList"></div>
+</div>
+
+<!-- MESSAGES -->
+<div class="tab" id="at-msg">
+  <div class="ph"><h2>💬 إرسال رسالة</h2></div>
+  <div class="card">
+    <div class="cb">
+      <div class="fg"><label>اختر الموظف</label><select class="fi" id="msgEmpSel"></select></div>
+      <div class="fg"><label>الرسالة</label><textarea class="fi" id="msgText" placeholder="اكتب رسالتك..."></textarea></div>
+      <button class="btn btn-ok" onclick="sendMessage()">💬 إرسال</button>
+      <div class="divider mt12"></div>
+      <h4 style="font-size:13px;font-weight:700;margin-bottom:8px">📨 الرسائل المرسلة</h4>
+      <div id="sentMessages"></div>
+    </div>
+  </div>
+</div>
+
+<!-- LEAVE REQUESTS -->
+<div class="tab" id="at-leave">
+  <div class="ph"><h2>🌴 طلبات الإجازة</h2></div>
+  <div class="card mb12">
+    <div class="ch"><h3>⏳ طلبات بانتظار الموافقة</h3><span id="leavePendingCount" class="cbadge">0</span></div>
+    <div id="leavePendingList"><div class="empty"><div class="ei">🌴</div><p>لا توجد طلبات معلقة</p></div></div>
+  </div>
+  <div class="card">
+    <div class="ch"><h3>✅ الطلبات المنتهية</h3></div>
+    <div id="leaveArchivedList"><div class="empty"><div class="ei">📋</div><p>لا توجد طلبات سابقة</p></div></div>
+  </div>
+</div>
+
+<!-- LEAVE MANAGEMENT -->
+<div class="tab" id="at-leave_mgmt">
+  <div class="ph"><h2>📆 إدارة الإجازات</h2><p>أضف أيام إجازة مباشرة لأي موظف — لن تُحتسب غياباً</p></div>
+  <div class="card mb12" style="border-color:rgba(206,147,216,.25);background:linear-gradient(135deg,rgba(206,147,216,.04),transparent)">
+    <div class="ch"><h3 style="color:var(--purple)">➕ إضافة يوم إجازة</h3></div>
+    <div class="cb">
+      <div style="display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:end">
+        <div class="fg" style="margin:0"><label>الموظف</label><select class="fi" id="leaveMgmtEmp"></select></div>
+        <div class="fg" style="margin:0"><label>التاريخ</label><input type="date" class="fi" id="leaveMgmtDate"></div>
+        <button class="btn btn-ok" onclick="addLeaveDayAdmin()" style="height:42px">➕ إضافة</button>
+      </div>
+      <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px;margin-top:10px"><input type="checkbox" id="leaveMgmtPaid" checked style="accent-color:var(--purple);width:15px;height:15px"> إجازة مدفوعة (تُحتسب كيوم حضور في الراتب)</label>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ch"><h3>📋 سجل الإجازات</h3><select class="fi btn-sm" id="leaveMgmtFilter" onchange="renderLeaveMgmtList()" style="max-width:160px"><option value="">كل الموظفين</option></select></div>
+    <div class="cb" id="leaveMgmtList"><div class="empty"><div class="ei">🌴</div><p>لا توجد إجازات مسجلة</p></div></div>
+  </div>
+</div>
+
+<!-- LOANS ADMIN — طلبات السلف -->
+<div class="tab" id="at-loans">
+  <div class="ph"><h2>💳 طلبات السلف</h2><p>الموافقة تخصم السلفة من راتب الموظف تلقائياً</p></div>
+  <div class="card mb12">
+    <div class="ch"><h3>⏳ طلبات بانتظار الموافقة</h3><span id="loanPendingCount" class="cbadge">0</span></div>
+    <div id="loanPendingList"><div class="empty"><div class="ei">💳</div><p>لا توجد طلبات معلقة</p></div></div>
+  </div>
+  <div class="card">
+    <div class="ch"><h3>📋 الطلبات المنتهية</h3></div>
+    <div id="loanArchivedList"><div class="empty"><div class="ei">📋</div><p>لا توجد طلبات سابقة</p></div></div>
+  </div>
+</div>
+
+<!-- ADMIN LOGS -->
+<div class="tab" id="at-logs">
+  <div class="ph fb">
+    <div><h2>📝 سجل العمليات</h2><p>كل تعديل يُسجَّل هنا</p></div>
+    <button class="btn btn-dn btn-sm" onclick="clearAdminLogs()">🗑️ مسح السجل</button>
+  </div>
+  <div class="filter-row">
+    <input type="text" class="fi" id="logsSearch" placeholder="🔍 بحث في السجل..." oninput="renderAdminLogs()">
+  </div>
+  <div class="card"><div id="adminLogsList"><div class="empty"><div class="ei">📝</div><p>لا توجد عمليات مسجلة</p></div></div></div>
+</div>
+
+<!-- SALES STATS -->
+<div class="tab" id="at-sales">
+  <div class="ph fb">
+    <div><h2>📦 إحصائيات الطلبات</h2><p>عدد الطلبات لكل موظف — فيسبوك / انستقرام / واتساب</p></div>
+    <button class="btn btn-pr btn-sm" onclick="openAddSaleNew()">➕ إضافة</button>
+  </div>
+  <!-- فلتر فترة -->
+  <div class="card mb12" style="border-color:rgba(0,229,255,.2)">
+    <div class="ch"><h3>🔍 فلتر التقارير</h3></div>
+    <div class="cb">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:8px;align-items:end;flex-wrap:wrap">
+        <div class="fg" style="margin:0"><label>الموظف</label><select class="fi" id="salesFilterEmpNew"><option value="">كل الموظفين</option></select></div>
+        <div class="fg" style="margin:0"><label>من تاريخ</label><input type="date" class="fi" id="salesFromDate"></div>
+        <div class="fg" style="margin:0"><label>إلى تاريخ</label><input type="date" class="fi" id="salesToDate"></div>
+        <button class="btn btn-pr" onclick="renderSalesStatsNew()" style="height:42px">📊 عرض</button>
+      </div>
+      <div id="salesRangeStats" style="margin-top:14px"></div>
+    </div>
+  </div>
+  <!-- ملخص اليوم -->
+  <div class="card mb12">
+    <div class="ch"><h3>📊 ملخص اليوم</h3><span class="muted" id="salesTodayLabel">--</span></div>
+    <div id="salesTodaySummary"></div>
+  </div>
+  <!-- سجل مفصل -->
+  <div class="card">
+    <div class="ch"><h3>📋 سجل الطلبات</h3></div>
+    <div class="filter-row" style="padding:12px 16px 0">
+      <select class="fi" id="salesEmpFilter" onchange="renderSalesLog()"><option value="">كل الموظفين</option></select>
+      <input type="date" class="fi" style="max-width:160px" id="salesDateFilter" onchange="renderSalesLog()">
+    </div>
+    <div id="salesLogList"></div>
+  </div>
+</div>
+
+<!-- MAP - خريطة الموظفين -->
+<div class="tab" id="at-map">
+  <div class="ph"><h2>🗺️ خريطة الموظفين</h2><p>مواقع الموظفين عند تسجيل الحضور</p></div>
+  <div class="card mb12">
+    <div class="ch"><h3>📍 آخر موقع مسجل لكل موظف</h3><button class="btn btn-sc btn-sm" onclick="refreshMapData()">🔄 تحديث</button></div>
+    <div class="cb" id="empLocationList"></div>
+  </div>
+  <div class="card">
+    <div class="ch"><h3>🗺️ الخريطة</h3></div>
+    <div style="padding:12px">
+      <div id="adminMapContainer" style="border-radius:12px;overflow:hidden;background:var(--bg3);min-height:380px;display:flex;align-items:center;justify-content:center">
+        <div id="adminMapPlaceholder" style="text-align:center;color:var(--t3);padding:40px">
+          <div style="font-size:36px;margin-bottom:12px">🗺️</div>
+          <div style="font-size:13px">اضغط على موظف لرؤية موقعه</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- GROUP CHAT - الدردشة الجماعية للمدير -->
+<div class="tab" id="at-groupchat">
+  <div class="ph"><h2>💬 الدردشة الجماعية</h2><p>غرفة مشتركة مع جميع الموظفين</p></div>
+  <div class="card" style="padding:0;overflow:hidden">
+    <div class="chat-wrap" style="height:calc(100vh - 280px)">
+      <div class="chat-messages" id="adminChatMessages"></div>
+    </div>
+    <div class="chat-input-bar">
+      <input type="text" id="adminChatInput" placeholder="اكتب رسالة للكل..." onkeydown="if(event.key==='Enter')sendAdminChatMsg()">
+      <button class="btn btn-pr" onclick="sendAdminChatMsg()">📤 إرسال</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADVANCED REPORTS - تقارير متقدمة -->
+<div class="tab" id="at-advrep">
+  <div class="ph fb">
+    <div><h2>📈 تقارير متقدمة</h2><p>رسوم بيانية تفاعلية</p></div>
+    <div class="flex g8">
+      <select class="fi btn-sm" id="advRepPeriod" onchange="renderAdvReports()" style="max-width:140px">
+        <option value="7">آخر 7 أيام</option>
+        <option value="15">آخر 15 يوم</option>
+        <option value="30">آخر 30 يوم</option>
+      </select>
+      <button class="btn btn-ok btn-sm" onclick="exportAdvReportExcel()">📊 Excel</button>
+    </div>
+  </div>
+  <!-- Attendance Trend -->
+  <div class="chart-adv">
+    <div style="font-size:13px;font-weight:700;margin-bottom:12px;color:var(--cyan)">📅 اتجاه الحضور اليومي</div>
+    <div style="height:200px"><canvas id="attTrendChart"></canvas></div>
+  </div>
+  <!-- Salary Distribution -->
+  <div class="chart-adv">
+    <div style="font-size:13px;font-weight:700;margin-bottom:12px;color:var(--gold)">💰 توزيع الرواتب والحوافز</div>
+    <div style="height:200px"><canvas id="salDistChart"></canvas></div>
+  </div>
+  <!-- Per Employee Attendance -->
+  <div class="chart-adv">
+    <div style="font-size:13px;font-weight:700;margin-bottom:12px;color:var(--green)">👥 نسبة حضور كل موظف</div>
+    <div style="height:200px"><canvas id="empAttChart"></canvas></div>
+  </div>
+  <!-- Bonus breakdown -->
+  <div class="chart-adv">
+    <div style="font-size:13px;font-weight:700;margin-bottom:12px;color:var(--purple)">🎁 توزيع الحوافز</div>
+    <div style="height:200px"><canvas id="bonDistChart"></canvas></div>
+  </div>
+</div>
+
+<!-- SETTINGS -->
+<div class="tab" id="at-cfg">
+  <div class="ph"><h2>⚙️ الإعدادات</h2></div>
+  <div class="card mb12">
+    <div class="ch"><h3>🔐 بيانات الدخول للمدير</h3></div>
+    <div class="cb">
+      <div class="fg"><label>اليوزر الجديد</label><input type="text" class="fi" id="newAdminUser" style="direction:ltr;text-align:left"></div>
+      <div class="fg"><label>كلمة المرور الجديدة</label><input type="password" class="fi" id="newAdminPw"></div>
+      <button class="btn btn-wa" onclick="changeAdminCreds()">حفظ 🔒</button>
+    </div>
+  </div>
+  <div class="card mb12">
+    <div class="ch"><h3>📍 موقع العمل</h3></div>
+    <div class="cb">
+      <div class="igrid mb12">
+        <div class="ii"><div class="lb">خط العرض</div><div class="vl cyan" id="cfgLat">33.357460</div></div>
+        <div class="ii"><div class="lb">خط الطول</div><div class="vl cyan" id="cfgLng">44.424685</div></div>
+        <div class="ii"><div class="lb">النطاق</div><div class="vl green" id="cfgRad">100 متر</div></div>
+        <div class="ii"><div class="lb">العنوان</div><div class="vl" style="font-size:11px">حي اور، بغداد</div></div>
+      </div>
+      <div class="flex g8" style="flex-wrap:wrap">
+        <div style="flex:1;min-width:120px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">خط العرض</label><input type="number" class="fi" id="inpLat" step="0.0001" value="33.3574598"></div>
+        <div style="flex:1;min-width:120px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">خط الطول</label><input type="number" class="fi" id="inpLng" step="0.0001" value="44.4246846"></div>
+        <div style="flex:1;min-width:80px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">النطاق (م)</label><input type="number" class="fi" id="inpRad" value="100"></div>
+      </div>
+      <div class="flex g8 mt8" style="flex-wrap:wrap">
+        <button class="btn btn-ok" onclick="saveWorkLocation()">💾 حفظ الموقع</button>
+        <button class="btn btn-sc btn-sm" onclick="useCurrentAsWork()">📍 استخدم موقعي الحالي</button>
+        <a href="https://maps.google.com/?q=33.3089,44.4425" target="_blank" class="btn btn-sc btn-sm">🗺️ الخريطة</a>
+      </div>
+      <p style="font-size:11px;color:var(--t3);margin-top:8px">💡 يمكنك الضغط على "استخدم موقعي الحالي" لضبط موقع العمل تلقائياً</p>
+    </div>
+  </div>
+  <div class="card mb12" style="border-color:rgba(255,152,0,.2);background:rgba(255,152,0,.03)">
+    <div class="ch"><h3>🔄 مزامنة Firebase (بين الأجهزة)</h3><span id="syncBadge" style="font-size:11px;padding:3px 10px;border-radius:8px;background:rgba(255,152,0,.12);color:#ff9800">⚠️ غير مفعّل</span></div>
+    <div class="cb">
+      <div style="background:rgba(0,230,118,.05);border:1px solid rgba(0,230,118,.15);border-radius:10px;padding:12px;margin-bottom:12px;font-size:12px;color:var(--t2);line-height:1.8">
+        ✅ <strong style="color:var(--green)">المشروع مربوط تلقائياً:</strong> abn-alsham<br>
+        📡 Database: <span style="color:var(--cyan);direction:ltr;display:inline-block">abn-alsham-default-rtdb.firebaseio.com</span><br>
+        🔄 المزامنة تعمل تلقائياً بين جميع الأجهزة فور فتح التطبيق
+      </div>
+      <div style="background:rgba(240,192,64,.04);border:1px solid rgba(240,192,64,.15);border-radius:10px;padding:12px;margin-bottom:12px;font-size:12px;color:var(--t2);line-height:1.8">
+        ⚠️ <strong style="color:var(--gold)">مهم — قواعد Firebase:</strong><br>
+        اذهب لـ Firebase Console ← Realtime Database ← <strong>Rules</strong><br>
+        غيّر القواعد إلى:
+        <code style="direction:ltr;display:block;background:var(--bg);padding:8px;border-radius:6px;font-size:11px;margin-top:6px;color:var(--green)">{"rules":{".read":true,".write":true}}</code>
+        ثم اضغط <strong>Publish</strong>
+      </div>
+      <div class="flex g8" style="flex-wrap:wrap">
+        <button class="btn btn-ok" onclick="testFirebase()">🧪 اختبار الاتصال</button>
+        <button class="btn btn-tg btn-sm" onclick="forcePushToCloud()">☁️ رفع البيانات للسحابة</button>
+      </div>
+      <div id="fbStatusMsg" style="margin-top:10px;font-size:12px;color:var(--t2)"></div>
+    </div>
+  </div>
+  <div class="card mb12">
+    <div class="ch"><h3>🤖 بوت تليجرام</h3></div>
+    <div class="cb">
+      <div class="fg"><label>Chat ID الخاص بك</label><input type="text" class="fi" id="tgChatId" placeholder="مثال: 817533960" style="direction:ltr;text-align:left"></div>
+      <div class="fg"><label>🔑 Token البوت (اختياري — لتغيير البوت)</label><input type="text" class="fi" id="tgTokenInput" placeholder="مثال: 123456789:AAE..." style="direction:ltr;text-align:left;font-size:11px"></div>
+      <div class="flex g8" style="flex-wrap:wrap">
+        <button class="btn btn-ok btn-sm" onclick="saveTgSettings()">💾 حفظ</button>
+        <button class="btn btn-sc btn-sm" onclick="testTg()">🧪 اختبار</button>
+        <button class="btn btn-tg btn-sm" onclick="sendTgReport()">📤 إرسال تقرير</button>
+      </div>
+      <div style="background:rgba(0,136,204,.06);border:1px solid rgba(0,136,204,.15);border-radius:10px;padding:12px;margin-top:12px;font-size:12px;color:var(--t2);line-height:1.7">
+        📌 <strong style="color:var(--cyan)">Token الحالي:</strong> <code style="font-size:10px;background:var(--bg3);padding:2px 6px;border-radius:4px;direction:ltr;display:inline-block" id="tgTokenDisplay">--</code><br>
+        ✅ Chat ID: راسل <code style="background:var(--bg3);padding:1px 5px;border-radius:4px">@userinfobot</code> وأرسل /start<br>
+        ⏰ التقرير التلقائي: <strong style="color:var(--green)">4:00 صباحاً</strong> | الاستفسار: <strong style="color:var(--gold)">3:00 صباحاً</strong><br>
+        🇮🇶 <strong style="color:var(--orange)">في العراق؟</strong> النظام يجرب 3 طرق إرسال تلقائياً (direct → corsproxy → allorigins)<br>
+        <span id="tgSendStatus" style="font-weight:700;display:block;margin-top:6px"></span>
+      </div>
+    </div>
+  </div>
+  <!-- ══ إدارة الأدمنز الفرعيين ══ -->
+  <div class="card mb12" style="border-color:rgba(206,147,216,.25);background:rgba(206,147,216,.03)">
+    <div class="ch"><h3 style="color:var(--purple)">👑 إدارة حسابات المديرين</h3><button class="btn btn-pr btn-sm" onclick="openAddSubAdmin()">➕ إضافة مدير</button></div>
+    <div class="cb">
+      <div style="font-size:12px;color:var(--t2);margin-bottom:12px;line-height:1.8">
+        يمكنك إضافة مديرين فرعيين مع تحديد صلاحياتهم بدقة. الأدمن الرئيسي (سجاد) له كامل الصلاحيات.
+      </div>
+      <div id="subAdminList"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ch"><h3>🛠️ أدوات</h3></div>
+    <div class="cb"><div class="flex g10" style="flex-wrap:wrap">
+      <button class="btn btn-sc" onclick="exportData()">📤 تصدير JSON</button>
+      <button class="btn btn-sc" onclick="resetDemo()">🔄 إعادة تهيئة</button>
+      <button class="btn btn-dn" onclick="clearAll()">🗑️ مسح الكل</button>
+    </div></div>
+  </div>
+</div>
+
+  </div>
+    <div class="mobile-nav" id="adminMobileNav">
+      <div class="mnav-item active" onclick="showATab('ov',this)"><div class="mnav-icon">📊</div><span>نظرة</span></div>
+      <div class="mnav-item" onclick="showATab('emp',this)"><div class="mnav-icon">👥</div><span>الموظفون</span></div>
+      <div class="mnav-item" onclick="showATab('att',this)"><div class="mnav-icon">📍</div><span>الحضور</span></div>
+      <div class="mnav-item" onclick="showATab('sal',this)"><div class="mnav-icon">💰</div><span>الرواتب</span></div>
+      <div class="mnav-item" onclick="showATab('inc',this)"><div class="mnav-icon">🎁</div><span>الحوافز</span></div>
+      <div class="mnav-item" onclick="showATab('sh',this)"><div class="mnav-icon">🕐</div><span>الشفتات</span></div>
+      <div class="mnav-item" onclick="showATab('rate',this)"><div class="mnav-icon">⭐</div><span>تقييم</span></div>
+      <div class="mnav-item" onclick="showATab('leave',this)"><div class="mnav-icon">🌴</div><span>إجازات</span><span class="mnav-dot" id="mnavLeaveCount"></span></div>
+      <div class="mnav-item" onclick="showATab('leave_mgmt',this)"><div class="mnav-icon">📆</div><span>إدارة إجازة</span></div>
+      <div class="mnav-item" onclick="showATab('loans',this)"><div class="mnav-icon">💳</div><span>سلف</span><span class="mnav-dot" id="mnavLoanCount"></span></div>
+      <div class="mnav-item" onclick="showATab('arch',this)"><div class="mnav-icon">🗄️</div><span>الأرشيف</span></div>
+      <div class="mnav-item" onclick="showATab('rep',this)"><div class="mnav-icon">📋</div><span>التقارير</span></div>
+      <div class="mnav-item" onclick="showATab('msg',this)"><div class="mnav-icon">✉️</div><span>الرسائل</span><span class="mnav-dot" id="mnavMsgCount"></span></div>
+      <div class="mnav-item" onclick="showATab('logs',this)"><div class="mnav-icon">📝</div><span>لوج</span></div>
+      <div class="mnav-item" onclick="showATab('sales',this)"><div class="mnav-icon">📦</div><span>المبيعات</span></div>
+      <div class="mnav-item" onclick="showATab('map',this)"><div class="mnav-icon">🗺️</div><span>الخريطة</span></div>
+      <div class="mnav-item" onclick="showATab('groupchat',this)"><div class="mnav-icon">💬</div><span>دردشة</span></div>
+      <div class="mnav-item" onclick="showATab('advrep',this)"><div class="mnav-icon">📈</div><span>تقارير+</span></div>
+      <div class="mnav-item" onclick="showATab('cfg',this)"><div class="mnav-icon">⚙️</div><span>الإعدادات</span></div>
+    </div>
+</div>
+
+  </div>
+</div>
+
+<!-- ═══ MODALS ═══ -->
+
+<!-- Manual Multi-Day Attendance Modal -->
+
+<div class="mov" id="manAttMultiModal">
+  <div class="modal" style="max-width:440px">
+    <div class="mh"><h3>📅 تسجيل أيام حضور متعددة</h3><button class="mx" onclick="closeModal('manAttMultiModal')">✕</button></div>
+    <div class="mb">
+      <div class="fg"><label>الموظف</label><div id="manAttMultiEmpName" style="font-size:15px;font-weight:800;color:var(--gold);padding:8px 0"></div></div>
+      <div style="font-size:12px;color:var(--t2);margin-bottom:12px">اختر الأيام التي تريد تسجيل حضور بها — الأيام المسجلة مسبقاً لن تُكرر</div>
+      <div id="manAttMultiDaysList" style="max-height:320px;overflow-y:auto;display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px"></div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+        <div class="fg" style="flex:1;margin:0"><label>وقت الدخول</label><input type="time" class="fi" id="manAttMultiCi" value="09:00"></div>
+        <div class="fg" style="flex:1;margin:0"><label>وقت الخروج</label><input type="time" class="fi" id="manAttMultiCo" value="18:00"></div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-sc btn-sm" onclick="selectAllMultiDays()" style="flex:1">تحديد الكل</button>
+        <button class="btn btn-sc btn-sm" onclick="clearAllMultiDays()" style="flex:1">إلغاء الكل</button>
+      </div>
+    </div>
+    <div class="mf">
+      <button class="btn btn-ok" onclick="confirmManualAttMulti()" style="flex:1">✅ تسجيل الأيام المحددة</button>
+      <button class="btn btn-sc" onclick="closeModal('manAttMultiModal')">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Employee -->
+
+<div class="mov" id="addEmpModal">
+  <div class="modal">
+    <div class="mh"><h3>➕ إضافة موظف</h3><button class="mx" onclick="closeModal('addEmpModal')">✕</button></div>
+    <div class="mb">
+      <div class="fg"><label>الاسم الكامل *</label><input type="text" class="fi" id="neName"></div>
+      <div class="fg"><label>اليوزر * (سيكون اسم الموظف تلقائياً)</label><input type="text" class="fi" id="neUser" style="direction:ltr;text-align:left" autocapitalize="none"></div>
+      <div class="fg"><label>كلمة المرور * (7 أرقام موصى بها)</label><input type="text" class="fi" id="nePass" style="direction:ltr"></div>
+      <div class="fg"><label>الشفت *</label>
+        <select class="fi" id="neShift" onchange="handleShiftChange('ne')">
+          <option value="14:00-02:00">6 م — 2 ص (12س) • كامل</option>
+          <option value="15:30-03:30">3:30 م — 3:30 ص (12س) • كامل</option>
+          <option value="18:00-02:00">6 م — 2 ص (8س) • نصفي</option>
+          <option value="19:00-03:00">7 م — 3 ص (8س) • نصفي</option>
+          <option value="19:30-03:30">7:30 م — 3:30 ص (8س) • نصفي</option>
+          <option value="18:00-03:30">6 م — 3:30 ص (9.5س) • كامل</option>
+          <option value="18:00-04:00">6 م — 4 ص (10س) • يومي +4,250</option>
+          <option value="custom">وقت مخصص</option>
+        </select>
+      </div>
+      <div id="neCustomWrap" style="display:none">
+        <div class="flex g8">
+          <div class="fg" style="flex:1"><label>من</label><input type="time" class="fi" id="neCustomFrom"></div>
+          <div class="fg" style="flex:1"><label>إلى</label><input type="time" class="fi" id="neCustomTo"></div>
+        </div>
+      </div>
+      <div class="fg"><label>الراتب الشهري (د.ع) *</label><input type="number" class="fi" id="neSalary" placeholder="550000"></div>
+      <div class="fg"><label>ملاحظات</label><input type="text" class="fi" id="neNotes"></div>
+    </div>
+    <div class="mf"><button class="btn btn-sc" onclick="closeModal('addEmpModal')">إلغاء</button><button class="btn btn-pr" onclick="addEmp()">➕ إضافة</button></div>
+  </div>
+</div>
+
+<!-- Employee Detail -->
+
+<div class="mov" id="empDetailModal">
+  <div class="modal wide">
+    <div class="mh"><h3 id="detailTitle">تفاصيل</h3><button class="mx" onclick="closeModal('empDetailModal')">✕</button></div>
+    <div class="mb">
+      <div class="dtabs">
+        <div class="dtab active" onclick="showDTab('info',this)">المعلومات</div>
+        <div class="dtab" onclick="showDTab('sal',this)">الراتب</div>
+        <div class="dtab" onclick="showDTab('bon',this)">الحوافز</div>
+        <div class="dtab" onclick="showDTab('ded',this)">الخصومات</div>
+        <div class="dtab" onclick="showDTab('att',this)">الحضور</div>
+      </div>
+      <div class="dtc active" id="dt-info">
+        <div class="igrid mb12" id="detailIG"></div>
+        <div class="divider"></div>
+        <div class="fg"><label>تعديل الراتب</label><div class="flex g8"><input type="number" class="fi" id="eSalInp"><button class="btn btn-wa" onclick="saveSal()">حفظ</button></div></div>
+        <div class="fg"><label>تعديل الشفت</label>
+          <div class="flex g8">
+            <select class="fi" id="eShiftInp" onchange="handleShiftChange('e')">
+          <option value="14:00-02:00">6 م — 2 ص (12س) • كامل</option>
+          <option value="15:30-03:30">3:30 م — 3:30 ص (12س) • كامل</option>
+          <option value="18:00-02:00">6 م — 2 ص (8س) • نصفي</option>
+          <option value="19:00-03:00">7 م — 3 ص (8س) • نصفي</option>
+          <option value="19:30-03:30">7:30 م — 3:30 ص (8س) • نصفي</option>
+          <option value="18:00-03:30">6 م — 3:30 ص (9.5س) • كامل</option>
+          <option value="18:00-04:00">6 م — 4 ص (10س) • يومي +4,250</option>
+          <option value="custom">وقت مخصص</option>
+            </select>
+            <button class="btn btn-wa" onclick="saveShift()">حفظ</button>
+          </div>
+          <div id="eCustomWrap" style="display:none;margin-top:8px">
+            <div class="flex g8">
+              <div class="fg" style="flex:1;margin-bottom:0"><label style="font-size:11px">من</label><input type="time" class="fi" id="eCustomFrom"></div>
+              <div class="fg" style="flex:1;margin-bottom:0"><label style="font-size:11px">إلى</label><input type="time" class="fi" id="eCustomTo"></div>
+            </div>
+          </div>
+        </div>
+        <div class="fg"><label>تعديل اليوزر</label><div class="flex g8"><input type="text" class="fi" id="eUserInp" style="direction:ltr;text-align:left" autocapitalize="none"><button class="btn btn-wa" onclick="saveEmpUser()">حفظ</button></div></div>
+        <div class="fg"><label>كلمة مرور جديدة</label><div class="flex g8"><input type="text" class="fi" id="ePassInp" style="direction:ltr"><button class="btn btn-wa" onclick="saveEmpPw()">حفظ</button></div></div>
+        <div class="fg"><label>الإجازات المُستخدَمة هذا النصف</label><div class="flex g8"><input type="number" class="fi" id="eLvInp" min="0" max="10"><button class="btn btn-wa" onclick="saveLv()">حفظ</button></div></div>
+        <div class="fg"><label>ملاحظات</label><div class="flex g8"><input type="text" class="fi" id="eNotesInp"><button class="btn btn-wa" onclick="saveNotes()">حفظ</button></div></div>
+      </div>
+      <div class="dtc" id="dt-sal">
+        <div class="slip">
+          <div class="sliph"><h4>🍽️ ابن الشام — بغداد</h4><p id="dSlipName">--</p></div>
+          <div class="srow"><div class="sl2">الراتب الشهري</div><div class="sv2 gnum" id="ds-monthly">--</div></div>
+          <div class="srow"><div class="sl2">معدل اليوم</div><div class="sv2" id="ds-daily">--</div></div>
+          <div class="srow"><div class="sl2">أيام الحضور</div><div class="sv2 tgrn" id="ds-pres">--</div></div>
+          <div class="srow"><div class="sl2">إجازات مدفوعة</div><div class="sv2 tpur" id="ds-lv">--</div></div>
+          <div class="srow"><div class="sl2">غيابات مخصومة</div><div class="sv2 tred" id="ds-absd">--</div></div>
+          <div class="srow grn"><div class="sl2">راتب الأيام</div><div class="sv2" id="ds-earned">--</div></div>
+          <div class="divider"></div>
+          <div class="srow grn"><div class="sl2">مكافآت الشفتات</div><div class="sv2" id="ds-shbon">--</div></div>
+          <div class="srow grn"><div class="sl2">حوافز مبيعات</div><div class="sv2" id="ds-sbon">--</div></div>
+          <div class="srow grn"><div class="sl2">حوافز أخرى</div><div class="sv2" id="ds-obon">--</div></div>
+          <div class="divider"></div>
+          <div class="srow ded"><div class="sl2">الخصومات</div><div class="sv2" id="ds-ded">--</div></div>
+          <div class="divider"></div>
+          <div class="srow tot"><div class="sl2">💰 الإجمالي</div><div class="sv2" id="ds-tot">--</div></div>
+        </div>
+      </div>
+      <div class="dtc" id="dt-bon">
+        <div style="background:rgba(0,230,118,.04);border:1px solid rgba(0,230,118,.15);border-radius:12px;padding:14px;margin-bottom:12px">
+          <div style="font-size:13px;font-weight:700;margin-bottom:10px;color:var(--green)">➕ إضافة حافز</div>
+          <div class="fg"><label>نوع الحافز</label>
+            <select class="fi" id="dbType" onchange="document.getElementById('dbCustomWrap').style.display=this.value==='custom'||this.value==='shiftcustom'?'block':'none'">
+              <option value="sales100">100 قطعة جبن (+5,000)</option>
+              <option value="sales200">200 قطعة جبن (+10,000)</option>
+              <option value="shift">دوام كامل (+10,000)</option>
+              <option value="shiftcustom">حافز شفتات مخصص</option>
+              <option value="custom">حافز مخصص حر</option>
+            </select>
+          </div>
+          <div class="fg" id="dbCustomWrap" style="display:none"><label>المبلغ</label><input type="number" class="fi" id="dbCustomAmt"></div>
+          <div class="fg"><label>ملاحظة</label><input type="text" class="fi" id="dbNote"></div>
+          <button class="btn btn-ok btn-full" onclick="addBonD()">➕ إضافة</button>
+        </div>
+        <div id="dBonList"></div>
+      </div>
+      <div class="dtc" id="dt-ded">
+        <div style="background:rgba(233,69,96,.04);border:1px solid rgba(233,69,96,.15);border-radius:12px;padding:14px;margin-bottom:12px">
+          <div style="font-size:13px;font-weight:700;margin-bottom:10px;color:var(--red)">➖ إضافة خصم</div>
+          <div class="flex g8 mb12">
+            <input type="number" class="fi" id="ddAmt" placeholder="المبلغ">
+            <input type="text" class="fi" id="ddReason" placeholder="السبب">
+            <button class="btn btn-dn" style="white-space:nowrap" onclick="addDedD()">خصم</button>
+          </div>
+        </div>
+        <div id="dDedList"></div>
+      </div>
+      <div class="dtc" id="dt-att"><div id="dAttList"></div></div>
+    </div>
+    <div class="mf">
+      <button class="btn btn-dn btn-sm" onclick="deleteEmp()">🗑️ حذف</button>
+      <button class="btn btn-sc" onclick="closeModal('empDetailModal')">إغلاق</button>
+    </div>
+  </div>
+</div>
+
+<!-- Custom Bonus -->
+
+<div class="mov" id="cbModal">
+  <div class="modal" style="max-width:370px">
+    <div class="mh"><h3>✏️ حافز مخصص</h3><button class="mx" onclick="closeModal('cbModal')">✕</button></div>
+    <div class="mb">
+      <div class="fg"><label>المبلغ</label><input type="number" class="fi" id="cbAmt"></div>
+      <div class="fg"><label>السبب</label><input type="text" class="fi" id="cbReason"></div>
+    </div>
+    <div class="mf"><button class="btn btn-sc" onclick="closeModal('cbModal')">إلغاء</button><button class="btn btn-ok" onclick="addCustomBon()">➕ إضافة</button></div>
+  </div>
+</div>
+
+<!-- Quick Shift -->
+
+<div class="mov" id="qsModal">
+  <div class="modal" style="max-width:380px">
+    <div class="mh"><h3>🕐 تعديل الشفت</h3><button class="mx" onclick="closeModal('qsModal')">✕</button></div>
+    <div class="mb">
+      <div class="fg"><label>الموظف</label><input type="text" class="fi" id="qsName" readonly></div>
+      <div class="fg"><label>الشفت الجديد</label>
+        <select class="fi" id="qsShift" onchange="handleShiftChange('qs')">
+          <option value="14:00-02:00">6 م — 2 ص (12س) • كامل</option>
+          <option value="15:30-03:30">3:30 م — 3:30 ص (12س) • كامل</option>
+          <option value="18:00-02:00">6 م — 2 ص (8س) • نصفي</option>
+          <option value="19:00-03:00">7 م — 3 ص (8س) • نصفي</option>
+          <option value="19:30-03:30">7:30 م — 3:30 ص (8س) • نصفي</option>
+          <option value="18:00-03:30">6 م — 3:30 ص (9.5س) • كامل</option>
+          <option value="18:00-04:00">6 م — 4 ص (10س) • يومي +4,250</option>
+          <option value="custom">وقت مخصص</option>
+        </select>
+      </div>
+      <div id="qsCustomWrap" style="display:none">
+        <div class="flex g8">
+          <div class="fg" style="flex:1"><label>من</label><input type="time" class="fi" id="qsCustomFrom"></div>
+          <div class="fg" style="flex:1"><label>إلى</label><input type="time" class="fi" id="qsCustomTo"></div>
+        </div>
+      </div>
+    </div>
+    <div class="mf"><button class="btn btn-sc" onclick="closeModal('qsModal')">إلغاء</button><button class="btn btn-wa" onclick="saveQS()">حفظ</button></div>
+  </div>
+</div>
+
+<!-- Archive Detail -->
+
+<div class="mov" id="archDetailModal">
+  <div class="modal wide">
+    <div class="mh"><h3 id="archDetailTitle">تفاصيل الفترة</h3><button class="mx" onclick="closeModal('archDetailModal')">✕</button></div>
+    <div class="mb" id="archDetailContent"></div>
+    <div class="mf"><button class="btn btn-sc" onclick="closeModal('archDetailModal')">إغلاق</button></div>
+  </div>
+</div>
+
+<!-- Report Viewer -->
+
+<div class="mov" id="repViewModal">
+  <div class="modal wide">
+    <div class="mh"><h3>📋 التقرير</h3><button class="mx" onclick="closeModal('repViewModal')">✕</button></div>
+    <div class="mb"><div id="repViewContent" style="font-size:12px;line-height:1.8;white-space:pre-wrap;background:var(--bg3);border-radius:10px;padding:14px;font-family:monospace"></div></div>
+    <div class="mf">
+      <button class="btn btn-tg btn-sm" onclick="sendSavedReportToTg()">📤 إرسال لتليجرام</button>
+      <button class="btn btn-sc" onclick="closeModal('repViewModal')">إغلاق</button>
+    </div>
+  </div>
+</div>
+
+<!-- 3AM Prompt -->
+
+<div class="mov" id="promptModal">
+  <div style="width:100%;max-width:540px;padding:16px">
+    <div class="prompt-modal">
+      <h3>🕒 استفسار اليوم — سجاد محمد</h3>
+      <p style="font-size:12px;color:var(--t2);text-align:center;margin-bottom:16px">حدّد بيانات اليوم لحفظها وإرسالها تلقائياً</p>
+
+  <div class="prompt-section">
+    <h4>⏰ من يعمل شفت كامل اليوم؟</h4>
+    <div id="promptFullShiftList"></div>
+  </div>
+
+  <div class="prompt-section" style="border-color:rgba(206,147,216,.2);background:rgba(206,147,216,.04)">
+    <h4 style="color:var(--purple)">🌴 من حصل على إجازة اليوم؟</h4>
+    <div id="promptLeaveList"></div>
+  </div>
+
+  <div class="prompt-section" style="border-color:rgba(0,230,118,.2);background:rgba(0,230,118,.04)">
+    <h4 style="color:var(--green)">🧀 حوافز الجبن اليوم</h4>
+    <div id="promptCheeseList"></div>
+  </div>
+
+  <div class="flex g8" style="margin-top:16px;justify-content:flex-end;flex-wrap:wrap">
+    <button class="btn btn-sc" onclick="closeModal('promptModal')">تخطي</button>
+    <button class="btn btn-ok" onclick="submitPrompt()">✅ حفظ وإرسال</button>
+  </div>
+</div>
+
+  </div>
+</div>
+
+</script>
+
+<!-- Absent Alert 9AM Modal -->
+
+<div class="mov" id="absentAlertModal">
+  <div class="modal" style="max-width:480px">
+    <div class="mh"><h3>🔔 تنبيه — الساعة 9 صباحاً</h3><button class="mx" onclick="closeModal('absentAlertModal')">✕</button></div>
+    <div class="mb">
+      <div style="font-size:13px;color:var(--t2);margin-bottom:14px">الموظفون التاليون لم يسجلوا حضورهم — حدد وضع كل منهم:</div>
+      <div id="absentAlertList"></div>
+    </div>
+    <div class="mf"><button class="btn btn-sc" onclick="closeModal('absentAlertModal')">إغلاق</button></div>
+  </div>
+</div>
+
+<!-- Sub-Admin Modal -->
+
+<div class="mov" id="subAdminModal">
+  <div class="modal" style="max-width:460px">
+    <div class="mh"><h3 id="subAdminModalTitle">➕ إضافة مدير فرعي</h3><button class="mx" onclick="closeModal('subAdminModal')">✕</button></div>
+    <div class="mb">
+      <input type="hidden" id="subAdminEditId">
+      <div class="fg"><label>الاسم الكامل *</label><input type="text" class="fi" id="saName" placeholder="مثال: أحمد علي"></div>
+      <div class="fg"><label>اسم المستخدم *</label><input type="text" class="fi" id="saUser" placeholder="مثال: ahmed_admin" style="direction:ltr;text-align:left" autocapitalize="none"></div>
+      <div class="fg"><label>كلمة المرور *</label><input type="text" class="fi" id="saPass" placeholder="••••••••" style="direction:ltr"></div>
+      <div class="fg"><label>الدور / اللقب</label>
+        <select class="fi" id="saRole">
+          <option value="manager">مدير فرعي</option>
+          <option value="assistant">مساعد مدير</option>
+          <option value="supervisor">مشرف</option>
+        </select>
+      </div>
+      <div style="background:var(--bg3);border:1px solid var(--br);border-radius:12px;padding:14px;margin-top:4px">
+        <div style="font-size:12px;font-weight:700;color:var(--purple);margin-bottom:12px">🔐 الصلاحيات</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:12px">
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:8px;border-radius:8px;background:var(--bg2);border:1px solid var(--br)">
+            <input type="checkbox" id="perm_view_overview" style="accent-color:var(--purple);width:15px;height:15px"> نظرة عامة
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:8px;border-radius:8px;background:var(--bg2);border:1px solid var(--br)">
+            <input type="checkbox" id="perm_view_emp" style="accent-color:var(--purple);width:15px;height:15px"> عرض الموظفين
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:8px;border-radius:8px;background:var(--bg2);border:1px solid var(--br)">
+            <input type="checkbox" id="perm_manage_emp" style="accent-color:var(--purple);width:15px;height:15px"> إدارة الموظفين
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:8px;border-radius:8px;background:var(--bg2);border:1px solid var(--br)">
+            <input type="checkbox" id="perm_att" style="accent-color:var(--purple);width:15px;height:15px"> سجل الحضور
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:8px;border-radius:8px;background:var(--bg2);border:1px solid var(--br)">
+            <input type="checkbox" id="perm_salary" style="accent-color:var(--purple);width:15px;height:15px"> الرواتب
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:8px;border-radius:8px;background:var(--bg2);border:1px solid var(--br)">
+            <input type="checkbox" id="perm_incentives" style="accent-color:var(--purple);width:15px;height:15px"> الحوافز
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:8px;border-radius:8px;background:var(--bg2);border:1px solid var(--br)">
+            <input type="checkbox" id="perm_deductions" style="accent-color:var(--purple);width:15px;height:15px"> الخصومات
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:8px;border-radius:8px;background:var(--bg2);border:1px solid var(--br)">
+            <input type="checkbox" id="perm_shifts" style="accent-color:var(--purple);width:15px;height:15px"> الشفتات
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:8px;border-radius:8px;background:var(--bg2);border:1px solid var(--br)">
+            <input type="checkbox" id="perm_reports" style="accent-color:var(--purple);width:15px;height:15px"> التقارير
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:8px;border-radius:8px;background:var(--bg2);border:1px solid var(--br)">
+            <input type="checkbox" id="perm_leave" style="accent-color:var(--purple);width:15px;height:15px"> طلبات الإجازة
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:8px;border-radius:8px;background:var(--bg2);border:1px solid var(--br)">
+            <input type="checkbox" id="perm_messages" style="accent-color:var(--purple);width:15px;height:15px"> الرسائل
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:8px;border-radius:8px;background:var(--bg2);border:1px solid var(--br)">
+            <input type="checkbox" id="perm_sales" style="accent-color:var(--purple);width:15px;height:15px"> إحصائيات المبيعات
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:8px;border-radius:8px;background:var(--bg2);border:1px solid var(--br)">
+            <input type="checkbox" id="perm_logs" style="accent-color:var(--purple);width:15px;height:15px"> سجل العمليات
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:8px;border-radius:8px;background:var(--bg2);border:1px solid var(--br)">
+            <input type="checkbox" id="perm_settings" style="accent-color:var(--purple);width:15px;height:15px"> الإعدادات
+          </label>
+        </div>
+        <div class="flex g8 mt12">
+          <button class="btn btn-sc btn-sm" onclick="selectAllPerms(true)">✅ تحديد الكل</button>
+          <button class="btn btn-sc btn-sm" onclick="selectAllPerms(false)">❌ إلغاء الكل</button>
+        </div>
+      </div>
+    </div>
+    <div class="mf">
+      <button class="btn btn-sc" onclick="closeModal('subAdminModal')">إلغاء</button>
+      <button class="btn btn-pr" onclick="saveSubAdmin()">💾 حفظ</button>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Sale Modal -->
+
+<div class="mov" id="editSaleModal">
+  <div class="modal" style="max-width:420px">
+    <div class="mh"><h3>✏️ تعديل الطلب</h3><button class="mx" onclick="closeModal('editSaleModal')">✕</button></div>
+    <div class="mb">
+      <input type="hidden" id="editSaleId">
+      <div class="fg"><label>نوع الطلب / المنصة</label>
+        <select class="fi" id="editSalePlatform">
+          <option value="سفري">🚗 سفري</option>
+          <option value="دلفري">🛵 دلفري</option>
+          <option value="واتساب">📱 واتساب</option>
+          <option value="انستقرام">📸 انستقرام</option>
+          <option value="فيسبوك">👍 فيسبوك</option>
+          <option value="حضوري">🏪 حضوري</option>
+          <option value="أخرى">📝 أخرى</option>
+        </select>
+      </div>
+      <div class="fg"><label>هل العميل مشترك؟</label>
+        <select class="fi" id="editSaleSubscribed" onchange="document.getElementById('editSaleAmountWrap').style.display=this.value==='yes'?'block':'none'">
+          <option value="no">❌ غير مشترك</option>
+          <option value="yes">✅ مشترك</option>
+        </select>
+      </div>
+      <div class="fg" id="editSaleAmountWrap" style="display:none"><label>المبلغ</label><input type="number" class="fi" id="editSaleAmount" placeholder="0"></div>
+      <div class="fg"><label>ملاحظة</label><input type="text" class="fi" id="editSaleNote" placeholder="اختياري"></div>
+    </div>
+    <div class="mf"><button class="btn btn-sc" onclick="closeModal('editSaleModal')">إلغاء</button><button class="btn btn-pr" onclick="saveEditSale()">💾 حفظ</button></div>
+  </div>
+</div>
+
+<!-- Add Sale Modal -->
+
+<div class="mov" id="addSaleModal">
+  <div class="modal" style="max-width:480px">
+    <div class="mh"><h3>📦 إضافة طلبات موظف</h3><button class="mx" onclick="closeModal('addSaleModal')">✕</button></div>
+    <div class="mb">
+      <div class="fg"><label>الموظف</label><select class="fi" id="saleEmpSel"></select></div>
+      <div class="fg"><label>التاريخ</label><input type="date" class="fi" id="saleDate"></div>
+      <!-- 3 خانات المنصات -->
+      <div style="background:var(--bg3);border-radius:12px;padding:14px;margin-bottom:12px">
+        <div style="font-size:12px;font-weight:700;color:var(--t2);margin-bottom:12px">عدد الطلبات لكل منصة</div>
+        <!-- فيسبوك -->
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;padding:10px;background:rgba(66,165,245,.08);border:1px solid rgba(66,165,245,.2);border-radius:10px">
+          <div style="width:36px;height:36px;border-radius:8px;background:rgba(66,165,245,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="#42a5f5"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          </div>
+          <div style="flex:1"><div style="font-size:13px;font-weight:700;color:var(--blue)">فيسبوك</div></div>
+          <input type="number" class="fi" id="saleFb" placeholder="0" min="0" style="width:80px;text-align:center;padding:8px">
+        </div>
+        <!-- انستقرام -->
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;padding:10px;background:rgba(206,147,216,.08);border:1px solid rgba(206,147,216,.2);border-radius:10px">
+          <div style="width:36px;height:36px;border-radius:8px;background:rgba(206,147,216,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ce93d8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          </div>
+          <div style="flex:1"><div style="font-size:13px;font-weight:700;color:var(--purple)">انستقرام</div></div>
+          <input type="number" class="fi" id="saleInsta" placeholder="0" min="0" style="width:80px;text-align:center;padding:8px">
+        </div>
+        <!-- واتساب -->
+        <div style="display:flex;align-items:center;gap:12px;padding:10px;background:rgba(0,230,118,.08);border:1px solid rgba(0,230,118,.2);border-radius:10px">
+          <div style="width:36px;height:36px;border-radius:8px;background:rgba(0,230,118,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="#00e676"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+          </div>
+          <div style="flex:1"><div style="font-size:13px;font-weight:700;color:var(--green)">واتساب</div></div>
+          <input type="number" class="fi" id="saleWa" placeholder="0" min="0" style="width:80px;text-align:center;padding:8px">
+        </div>
+      </div>
+      <div style="background:rgba(240,192,64,.06);border:1px solid rgba(240,192,64,.15);border-radius:10px;padding:10px;display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <span style="font-size:13px;font-weight:700">الإجمالي</span>
+        <span style="font-size:18px;font-weight:900;color:var(--gold)" id="saleTotalPreview">0 طلب</span>
+      </div>
+      <div class="fg"><label>ملاحظة (اختياري)</label><input type="text" class="fi" id="saleNote" placeholder="..."></div>
+    </div>
+    <div class="mf"><button class="btn btn-sc" onclick="closeModal('addSaleModal')">إلغاء</button><button class="btn btn-pr" onclick="addSaleRecordNew()">✅ حفظ</button></div>
+  </div>
+</div>
+
+<!-- Employee Leave Request notification badge CSS inline handled via JS -->
+
+<!-- Day Shift Edit Modal -->
+
+<div class="mov" id="dayShiftEditModal">
+  <div class="modal" style="max-width:380px">
+    <div class="mh"><h3 id="dseTitle">تعديل الشفت</h3><button class="mx" onclick="closeModal('dayShiftEditModal')">✕</button></div>
+    <div class="mb">
+      <div class="fg"><label>الشفت الجديد</label>
+        <select class="fi" id="dseShift" onchange="document.getElementById('dseCustomWrap').style.display=this.value==='custom'?'flex':'none'">
+          <option value="14:00-02:00">6 م — 2 ص (12س) • كامل</option>
+          <option value="15:30-03:30">3:30 م — 3:30 ص (12س) • كامل</option>
+          <option value="18:00-02:00">6 م — 2 ص (8س) • نصفي</option>
+          <option value="19:00-03:00">7 م — 3 ص (8س) • نصفي</option>
+          <option value="19:30-03:30">7:30 م — 3:30 ص (8س) • نصفي</option>
+          <option value="18:00-03:30">6 م — 3:30 ص (9.5س) • كامل</option>
+          <option value="18:00-04:00">6 م — 4 ص (10س) • يومي +4,250</option>
+          <option value="custom">وقت مخصص</option>
+          <option value="on_leave">🌴 مجاز — يُلغى من الجدول</option>
+        </select>
+      </div>
+      <div id="dseCustomWrap" style="display:none;gap:8px">
+        <div class="fg" style="flex:1"><label>من</label><input type="time" class="fi" id="dseFrom"></div>
+        <div class="fg" style="flex:1"><label>إلى</label><input type="time" class="fi" id="dseTo"></div>
+      </div>
+    </div>
+    <div class="mf">
+      <button class="btn btn-sc" onclick="closeModal('dayShiftEditModal')">إلغاء</button>
+      <button class="btn btn-ok" onclick="saveDayShiftEdit()">✅ حفظ</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Custom Shift Modal -->
+
+<div class="mov" id="addShiftModal">
+  <div class="modal" style="max-width:420px">
+    <div class="mh"><h3>➕ إضافة شفت جديد</h3><button class="mx" onclick="closeModal('addShiftModal')">✕</button></div>
+    <div class="mb">
+      <div class="fg"><label>اسم الشفت (مثال: 8 م — 4 ص)</label><input type="text" class="fi" id="newShiftName" placeholder="6 م — 4 ص"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div class="fg"><label>من (صيغة 24س)</label><input type="time" class="fi" id="newShiftFrom" value="18:00"></div>
+        <div class="fg"><label>إلى (صيغة 24س)</label><input type="time" class="fi" id="newShiftTo" value="04:00"></div>
+      </div>
+      <div class="fg"><label>نوع المكافأة</label>
+        <select class="fi" id="newShiftBonType" onchange="document.getElementById('newShiftBonAmtWrap').style.display=this.value!=='none'?'block':'none'">
+          <option value="none">بدون مكافأة</option>
+          <option value="full">كامل — +10,000</option>
+          <option value="daily">يومي — مبلغ لكل يوم حضور</option>
+        </select>
+      </div>
+      <div class="fg" id="newShiftBonAmtWrap" style="display:none"><label>مبلغ المكافأة (د.ع)</label><input type="number" class="fi" id="newShiftBonAmt" placeholder="4250"></div>
+    </div>
+    <div class="mf">
+      <button class="btn btn-sc" onclick="closeModal('addShiftModal')">إلغاء</button>
+      <button class="btn btn-pr" onclick="saveNewShift()">✅ إضافة</button>
+    </div>
+  </div>
+</div>
+</body>
+<footer style="
+  text-align:center;
+  margin-top:40px;
+  padding:20px 10px;
+  color:#8888a0;
+  font-size:12px;
+  border-top:1px solid rgba(255,255,255,0.08);
+  background:rgba(255,255,255,0.02)
+">
+  ©️ 2026 جميع الحقوق محفوظة - <span style="color:#f5a623;font-weight:700">سجاد محمد</span> 
+</footer>
+</html>
