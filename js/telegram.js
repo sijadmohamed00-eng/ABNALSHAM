@@ -1300,17 +1300,31 @@ function deleteLeaveRecord(id){
   if(!confirm('حذف هذا السجل؟'))return;
   let leaves=DB.get('leaveRequests')||[];
   const updated=leaves.filter(r=>r.id!==id);
-  DB.set('leaveRequests',updated);
-  if(fbDB&&fbSyncEnabled)fbDB.ref('ccs/leaveRequests').set(updated);
-  renderLeaveRequests();showToast('🗑️ تم الحذف','i');
+  // احفظ محلياً وعلى Firebase مع إيقاف المستمع مؤقتاً
+  localStorage.setItem('ccs2_leaveRequests',JSON.stringify(updated));
+  if(fbDB&&fbSyncEnabled){
+    _fbListening=false;
+    fbDB.ref('ccs/leaveRequests').set(updated||[]).then(()=>{
+      setTimeout(()=>{_fbListening=true;},2000);
+    });
+  }
+  renderLeaveRequests();
+  showToast('🗑️ تم الحذف','i');
 }
+
 function clearLeaveArchive(){
   if(!confirm('مسح كل سجل الإجازات المنتهية؟'))return;
   let leaves=DB.get('leaveRequests')||[];
   const updated=leaves.filter(r=>r.status==='pending');
-  DB.set('leaveRequests',updated);
-  if(fbDB&&fbSyncEnabled)fbDB.ref('ccs/leaveRequests').set(updated);
-  renderLeaveRequests();showToast('🗑️ تم مسح السجل','i');
+  localStorage.setItem('ccs2_leaveRequests',JSON.stringify(updated));
+  if(fbDB&&fbSyncEnabled){
+    _fbListening=false;
+    fbDB.ref('ccs/leaveRequests').set(updated||[]).then(()=>{
+      setTimeout(()=>{_fbListening=true;},2000);
+    });
+  }
+  renderLeaveRequests();
+  showToast('🗑️ تم مسح السجل','i');
 }
 
 // ── حذف سجل سلفة ──
@@ -1318,17 +1332,61 @@ function deleteLoanRecord(id){
   if(!confirm('حذف هذا السجل؟'))return;
   let loans=DB.get('loanRequests')||[];
   const updated=loans.filter(l=>l.id!==id);
-  DB.set('loanRequests',updated);
-  if(fbDB&&fbSyncEnabled)fbDB.ref('ccs/loanRequests').set(updated);
-  renderAdminLoans();showToast('🗑️ تم الحذف','i');
+  localStorage.setItem('ccs2_loanRequests',JSON.stringify(updated));
+  if(fbDB&&fbSyncEnabled){
+    _fbListening=false;
+    fbDB.ref('ccs/loanRequests').set(updated||[]).then(()=>{
+      setTimeout(()=>{_fbListening=true;},2000);
+    });
+  }
+  renderAdminLoans();
+  showToast('🗑️ تم الحذف','i');
 }
+
 function clearLoanArchive(){
   if(!confirm('مسح كل سجل السلف المنتهية؟'))return;
   let loans=DB.get('loanRequests')||[];
   const updated=loans.filter(l=>l.status==='pending');
-  DB.set('loanRequests',updated);
-  if(fbDB&&fbSyncEnabled)fbDB.ref('ccs/loanRequests').set(updated);
-  renderAdminLoans();showToast('🗑️ تم مسح السجل','i');
+  localStorage.setItem('ccs2_loanRequests',JSON.stringify(updated));
+  if(fbDB&&fbSyncEnabled){
+    _fbListening=false;
+    fbDB.ref('ccs/loanRequests').set(updated||[]).then(()=>{
+      setTimeout(()=>{_fbListening=true;},2000);
+    });
+  }
+  renderAdminLoans();
+  showToast('🗑️ تم مسح السجل','i');
+}
+
+
+// ══════════════════════════════════════════════════════
+//  مسح موظفي السحابة
+// ══════════════════════════════════════════════════════
+function clearCloudEmps(){
+  if(!confirm('هذا سيمسح كل الموظفين من السحابة والجهاز نهائياً. متأكد؟'))return;
+  // مسح محلياً
+  localStorage.setItem('ccs2_emps',JSON.stringify([]));
+  localStorage.setItem('ccs2_att',JSON.stringify([]));
+  // مسح من Firebase
+  if(fbDB&&fbSyncEnabled){
+    _fbListening=false;
+    Promise.all([
+      fbDB.ref('ccs/emps').set([]),
+      fbDB.ref('ccs/att').set([]),
+      fbDB.ref('ccs/loanRequests').set([]),
+      fbDB.ref('ccs/leaveRequests').set([]),
+      fbDB.ref('ccs/adminLogs').set([]),
+    ]).then(()=>{
+      setTimeout(()=>{_fbListening=true;},3000);
+      showToast('✅ تم مسح كل البيانات من السحابة','s');
+      renderAdmin();
+    }).catch(e=>{
+      showToast('❌ خطأ: '+e.message,'e');
+    });
+  } else {
+    showToast('✅ تم المسح محلياً','s');
+    renderAdmin();
+  }
 }
 
 function rejectLoan(id){
