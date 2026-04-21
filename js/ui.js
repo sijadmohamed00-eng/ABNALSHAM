@@ -1,6 +1,29 @@
 // ═══════════════════════════════════════════════════
 //  THEME — الوضع الداكن والفاتح
 // ═══════════════════════════════════════════════════
+function _applyTheme(mode){
+  const html=document.documentElement;
+  html.setAttribute('data-theme', mode);
+  const icon = mode==='light' ? '☀️' : '🌙';
+  document.querySelectorAll('#themeBtn,#themeBtnEmp').forEach(b=>{if(b)b.textContent=icon;});
+}
+
+function toggleTheme(){
+  const current=document.documentElement.getAttribute('data-theme')||'dark';
+  const next=current==='light'?'dark':'light';
+  _applyTheme(next);
+  DB.set('theme',next);
+}
+
+function initTheme(){
+  const saved=DB.get('theme')||'dark';
+  _applyTheme(saved);
+}
+
+
+// ═══════════════════════════════════════════════════
+//  THEME — الوضع الداكن والفاتح
+// ═══════════════════════════════════════════════════
 function toggleTheme(){
   const html=document.documentElement;
   const isLight=html.getAttribute('data-theme')==='light';
@@ -17,9 +40,19 @@ function toggleTheme(){
 
 function initTheme(){
   const saved=DB.get('theme')||'dark';
-  if(saved==='light'){
-    document.documentElement.setAttribute('data-theme','light');
-    document.querySelectorAll('#themeBtn,#themeBtnEmp').forEach(b=>{if(b)b.textContent='☀️';});
+  const apply=()=>{
+    if(saved==='light'){
+      document.documentElement.setAttribute('data-theme','light');
+      document.querySelectorAll('#themeBtn,#themeBtnEmp').forEach(b=>{if(b)b.textContent='☀️';});
+    } else {
+      document.documentElement.removeAttribute('data-theme');
+      document.querySelectorAll('#themeBtn,#themeBtnEmp').forEach(b=>{if(b)b.textContent='🌙';});
+    }
+  };
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',apply);
+  } else {
+    apply();
   }
 }
 
