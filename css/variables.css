@@ -1,71 +1,64 @@
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;900&display=swap');
 
-/* ═══════════════════════════════════════════
-   الوضع الداكن (افتراضي)
-═══════════════════════════════════════════ */
-:root {
-  --primary:#C0392B;
-  --primary2:#E74C3C;
-  --primary-dark:#8B0000;
+/* ════════════════════════════════════
+   DARK MODE (default)
+════════════════════════════════════ */
+:root,
+[data-theme="dark"] {
+  --primary: #C0392B;
+  --primary2: #E74C3C;
+  --gold: #C0392B;
+  --gold2: #E74C3C;
+  --cyan: #1ABC9C;
+  --green: #2ECC71;
+  --red: #E74C3C;
+  --purple: #9B59B6;
+  --orange: #E67E22;
+  --blue: #3498DB;
 
-  --green:#2ECC71;
-  --red:#E74C3C;
-  --blue:#3498DB;
-  --purple:#9B59B6;
-  --orange:#E67E22;
-  --cyan:#1ABC9C;
+  --bg:  #111111;
+  --bg2: #1C1C1C;
+  --bg3: #252525;
+  --bg4: #2E2E2E;
 
-  --gold:#C0392B;
-  --gold2:#E74C3C;
+  --br:  #333333;
+  --br2: #444444;
 
-  --bg:#0f0f0f;
-  --bg2:#1a1a1a;
-  --bg3:#242424;
-  --bg4:#2e2e2e;
+  --t1: #F0F0F0;
+  --t2: #AAAAAA;
+  --t3: #666666;
 
-  --br:#333333;
-  --br2:#444444;
-
-  --t1:#FFFFFF;
-  --t2:#BBBBBB;
-  --t3:#777777;
-
-  --shadow:0 4px 20px rgba(0,0,0,.5);
-  --radius:14px;
-  --mode:dark;
+  --shadow: 0 4px 20px rgba(0,0,0,.6);
+  --radius: 14px;
 }
 
-/* ═══════════════════════════════════════════
-   الوضع الفاتح
-═══════════════════════════════════════════ */
+/* ════════════════════════════════════
+   LIGHT MODE
+════════════════════════════════════ */
 [data-theme="light"] {
-  --primary:#B03020;
-  --primary2:#C0392B;
-  --primary-dark:#8B0000;
+  --primary: #A93226;
+  --primary2: #C0392B;
+  --gold: #A93226;
+  --gold2: #C0392B;
+  --cyan: #148F77;
+  --green: #1E8449;
+  --red: #C0392B;
+  --purple: #6C3483;
+  --orange: #A04000;
+  --blue: #1A5276;
 
-  --green:#27AE60;
-  --red:#C0392B;
-  --blue:#2980B9;
-  --purple:#8E44AD;
-  --orange:#D35400;
-  --cyan:#16A085;
+  --bg:  #F2F2F2;
+  --bg2: #FFFFFF;
+  --bg3: #E8E8E8;
+  --bg4: #D5D5D5;
 
-  --gold:#B03020;
-  --gold2:#C0392B;
+  --br:  #CCCCCC;
+  --br2: #AAAAAA;
 
-  --bg:#F5F5F5;
-  --bg2:#FFFFFF;
-  --bg3:#EEEEEE;
-  --bg4:#E0E0E0;
+  --t1: #111111;
+  --t2: #444444;
+  --t3: #888888;
 
-  --br:#CCCCCC;
-  --br2:#BBBBBB;
-
-  --t1:#1A1A1A;
-  --t2:#555555;
-  --t3:#999999;
-
-  --shadow:0 4px 20px rgba(0,0,0,.12);
-  --radius:14px;
-  --mode:light;
+  --shadow: 0 4px 20px rgba(0,0,0,.15);
+  --radius: 14px;
 }
