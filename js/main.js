@@ -1,4 +1,5 @@
 initData();
+initTheme();
 startClock();
 // Firebase sync init
 document.addEventListener('DOMContentLoaded',()=>{
