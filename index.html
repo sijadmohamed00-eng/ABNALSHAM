@@ -647,7 +647,7 @@
     <div id="leavePendingList"><div class="empty"><div class="ei">🌴</div><p>لا توجد طلبات معلقة</p></div></div>
   </div>
   <div class="card">
-    <div class="ch"><h3>✅ الطلبات المنتهية</h3></div>
+    <div class="ch"><h3>✅ الطلبات المنتهية</h3><button class="btn btn-dn btn-sm" onclick="clearArchivedLeaves()">🗑️ مسح السجل</button></div>
     <div id="leaveArchivedList"><div class="empty"><div class="ei">📋</div><p>لا توجد طلبات سابقة</p></div></div>
   </div>
 </div>
@@ -680,7 +680,7 @@
     <div id="loanPendingList"><div class="empty"><div class="ei">💳</div><p>لا توجد طلبات معلقة</p></div></div>
   </div>
   <div class="card">
-    <div class="ch"><h3>📋 الطلبات المنتهية</h3></div>
+    <div class="ch"><h3>📋 الطلبات المنتهية</h3><button class="btn btn-dn btn-sm" onclick="clearArchivedLoans()">🗑️ مسح السجل</button></div>
     <div id="loanArchivedList"><div class="empty"><div class="ei">📋</div><p>لا توجد طلبات سابقة</p></div></div>
   </div>
 </div>
@@ -875,7 +875,48 @@
       </div>
     </div>
   </div>
-  <!-- ══ إدارة الأدمنز الفرعيين ══ -->
+
+  <!-- بروكسي تليجرام -->
+  <div class="card mb12" style="border-color:rgba(0,136,204,.2);background:rgba(0,136,204,.03)">
+    <div class="ch"><h3>🔗 بروكسي تليجرام</h3></div>
+    <div class="cb">
+      <div style="font-size:12px;color:var(--t2);margin-bottom:10px;line-height:1.8">
+        إذا تليجرام محجوب في منطقتك، أضف بروكسي لتشغيله. الصيغة:<br>
+        <code style="font-size:11px;background:var(--bg3);padding:2px 6px;border-radius:4px;direction:ltr;display:inline-block">tg://proxy?server=...&port=...&secret=...</code>
+      </div>
+      <div class="fg"><label>رابط البروكسي</label>
+        <input type="text" class="fi" id="tgProxyUrl" placeholder="tg://proxy?server=...&port=...&secret=..." style="direction:ltr;text-align:left;font-size:11px">
+      </div>
+      <div class="flex g8" style="flex-wrap:wrap">
+        <button class="btn btn-ok btn-sm" onclick="saveTgProxy()">💾 حفظ البروكسي</button>
+        <button class="btn btn-sc btn-sm" onclick="openTgProxy()">🔗 فتح في تليجرام</button>
+        <button class="btn btn-dn btn-sm" onclick="clearTgProxy()">🗑️ حذف</button>
+      </div>
+      <div id="proxyStatus" style="margin-top:8px;font-size:12px;color:var(--t2)"></div>
+    </div>
+  </div>
+
+  
+  <!-- بروكسي تليجرام -->
+  <div class="card mb12" style="border-color:rgba(0,136,204,.2);background:rgba(0,136,204,.03)">
+    <div class="ch"><h3>🔗 بروكسي تليجرام</h3></div>
+    <div class="cb">
+      <div style="font-size:12px;color:var(--t2);margin-bottom:12px;line-height:1.8">
+        إذا تليجرام ما يشتغل بدون بروكسي، أضف بروكسي هنا وسيُستخدم تلقائياً
+      </div>
+      <div class="fg"><label>رابط البروكسي (tg://proxy أو https://)</label>
+        <input type="text" class="fi" id="tgProxyInput" placeholder="tg://proxy?server=...&port=...&secret=..." style="direction:ltr;text-align:left;font-size:11px">
+      </div>
+      <div class="flex g8" style="flex-wrap:wrap">
+        <button class="btn btn-ok btn-sm" onclick="saveTgProxy()">💾 حفظ البروكسي</button>
+        <button class="btn btn-sc btn-sm" onclick="openTgProxy()">🔗 فتح البروكسي</button>
+        <button class="btn btn-dn btn-sm" onclick="clearTgProxy()">🗑️ إزالة</button>
+      </div>
+      <div id="proxyStatus" style="font-size:11px;color:var(--t2);margin-top:8px"></div>
+    </div>
+  </div>
+
+<!-- ══ إدارة الأدمنز الفرعيين ══ -->
   <div class="card mb12" style="border-color:rgba(206,147,216,.25);background:rgba(206,147,216,.03)">
     <div class="ch"><h3 style="color:var(--purple)">👑 إدارة حسابات المديرين</h3><button class="btn btn-pr btn-sm" onclick="openAddSubAdmin()">➕ إضافة مدير</button></div>
     <div class="cb">
