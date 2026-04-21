@@ -2,9 +2,7 @@ function initData(){
   if(!DB.get('adminCreds'))DB.set('adminCreds',{u:_d('41,59,48,48,59,62,5,59,62,55,51,52'),pw:_d('27,62,55,51,52,26,104,106,104,111')});
   if(!DB.get('tgId'))DB.set('tgId',TG_CHAT_DEFAULT);
   if(!DB.get('emps')){
-    DB.set('emps',[
-      {id:'e0',name:'سجاد محمد',u:'sajjad',pw:_d('105,98,110,109,104,99,107'),sh:'14:00-02:00',sal:750000,notes:'المدير التنفيذي ⭐',rating:0,bon:[],ded:[],lvM:0,jd:todayStr()}
-    ]);
+    DB.set('emps',[]); // قائمة فارغة — أضف موظفيك من لوحة التحكم
   }
   if(!DB.get('att'))DB.set('att',[]);
   if(!DB.get('msg'))DB.set('msg',[]);
