@@ -81,6 +81,8 @@ function renderAdmin(){
   try{renderSalesLog();}catch(e){}
   try{initSaleFilter();}catch(e){}
   try{loadTgDisplay();}catch(e){}
+  try{loadTgProxy();}catch(e){}
+  try{loadTgProxy();}catch(e){}
   try{renderSubAdminList();}catch(e){}
   // v6 additions
   try{
