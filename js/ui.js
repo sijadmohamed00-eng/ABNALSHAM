@@ -1,3 +1,28 @@
+// ═══════════════════════════════════════════════════
+//  THEME — الوضع الداكن والفاتح
+// ═══════════════════════════════════════════════════
+function toggleTheme(){
+  const html=document.documentElement;
+  const isLight=html.getAttribute('data-theme')==='light';
+  if(isLight){
+    html.removeAttribute('data-theme');
+    DB.set('theme','dark');
+    document.querySelectorAll('#themeBtn,#themeBtnEmp').forEach(b=>{if(b)b.textContent='🌙';});
+  } else {
+    html.setAttribute('data-theme','light');
+    DB.set('theme','light');
+    document.querySelectorAll('#themeBtn,#themeBtnEmp').forEach(b=>{if(b)b.textContent='☀️';});
+  }
+}
+
+function initTheme(){
+  const saved=DB.get('theme')||'dark';
+  if(saved==='light'){
+    document.documentElement.setAttribute('data-theme','light');
+    document.querySelectorAll('#themeBtn,#themeBtnEmp').forEach(b=>{if(b)b.textContent='☀️';});
+  }
+}
+
 function startClock(){
   const t=setInterval(()=>{
     const now=new Date();
@@ -62,4 +87,3 @@ function _dailyAttReset(){
 let _gpsWatchId=null;
 let _autoCoEnabled=true; // الانصراف التلقائي مُفعَّل افتراضياً
 const AUTO_CO_DIST=750; // متر
-
