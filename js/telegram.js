@@ -1299,13 +1299,17 @@ function approveLoan(id){
 function deleteLeaveRecord(id){
   if(!confirm('حذف هذا السجل؟'))return;
   let leaves=DB.get('leaveRequests')||[];
-  DB.set('leaveRequests',leaves.filter(r=>r.id!==id));
+  const updated=leaves.filter(r=>r.id!==id);
+  DB.set('leaveRequests',updated);
+  if(fbDB&&fbSyncEnabled)fbDB.ref('ccs/leaveRequests').set(updated);
   renderLeaveRequests();showToast('🗑️ تم الحذف','i');
 }
 function clearLeaveArchive(){
   if(!confirm('مسح كل سجل الإجازات المنتهية؟'))return;
   let leaves=DB.get('leaveRequests')||[];
-  DB.set('leaveRequests',leaves.filter(r=>r.status==='pending'));
+  const updated=leaves.filter(r=>r.status==='pending');
+  DB.set('leaveRequests',updated);
+  if(fbDB&&fbSyncEnabled)fbDB.ref('ccs/leaveRequests').set(updated);
   renderLeaveRequests();showToast('🗑️ تم مسح السجل','i');
 }
 
@@ -1313,13 +1317,17 @@ function clearLeaveArchive(){
 function deleteLoanRecord(id){
   if(!confirm('حذف هذا السجل؟'))return;
   let loans=DB.get('loanRequests')||[];
-  DB.set('loanRequests',loans.filter(l=>l.id!==id));
+  const updated=loans.filter(l=>l.id!==id);
+  DB.set('loanRequests',updated);
+  if(fbDB&&fbSyncEnabled)fbDB.ref('ccs/loanRequests').set(updated);
   renderAdminLoans();showToast('🗑️ تم الحذف','i');
 }
 function clearLoanArchive(){
   if(!confirm('مسح كل سجل السلف المنتهية؟'))return;
   let loans=DB.get('loanRequests')||[];
-  DB.set('loanRequests',loans.filter(l=>l.status==='pending'));
+  const updated=loans.filter(l=>l.status==='pending');
+  DB.set('loanRequests',updated);
+  if(fbDB&&fbSyncEnabled)fbDB.ref('ccs/loanRequests').set(updated);
   renderAdminLoans();showToast('🗑️ تم مسح السجل','i');
 }
 
